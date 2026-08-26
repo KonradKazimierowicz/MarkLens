@@ -70,11 +70,12 @@ See [PRIVACY.md](PRIVACY.md) and [docs/SECURITY.md](docs/SECURITY.md) for the fu
 
 ## Developer quick start
 
-Requirements: Windows 10/11, Windows PowerShell 5.1+, and Microsoft Edge. Node.js is optional and used only for an extra JavaScript syntax check in the test runner.
+Runtime requirements: Windows 10/11, Windows PowerShell 5.1+, and Microsoft Edge. Contributors also need Node.js to run the real-browser security test; Node and Playwright are development-only and are not included in the installed application.
 
 ```powershell
 git clone https://github.com/KonradKazimierowicz/MarkLens.git
 cd MarkLens
+npm ci --ignore-scripts
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MarkLens.ps1 -Path .\sample\demo.md
 ```
 

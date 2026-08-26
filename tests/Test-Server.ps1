@@ -23,7 +23,10 @@ try {
     Assert-True ($url -match '^http://127\.0\.0\.1:\d+/$') 'Server must bind to the IPv4 loopback interface.'
     $page = Invoke-WebRequest -UseBasicParsing -Uri $url
     Assert-True ($page.StatusCode -eq 200) 'Viewer endpoint should return HTTP 200.'
-    Assert-True ($page.Headers['Content-Security-Policy'] -match "default-src 'none'") 'Viewer must send a restrictive CSP.'
+    # Windows PowerShell exposes a header as a string, while PowerShell 7 may
+    # expose the same value as a string collection. Normalize both shapes.
+    $contentSecurityPolicy = [string]::Join(', ', [string[]]$page.Headers['Content-Security-Policy'])
+    Assert-True ($contentSecurityPolicy -match "default-src 'none'") 'Viewer must send a restrictive CSP.'
     Assert-True ($page.Content -match '"csrfToken":"([^"]+)"') 'Bootstrap token is missing.'
     $token = $Matches[1]
 

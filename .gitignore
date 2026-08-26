@@ -2,6 +2,7 @@ dist/
 work/
 output/
 .playwright-cli/
+node_modules/
 *.exe
 *.sha256
 *.user

@@ -14,9 +14,10 @@ Thank you for helping keep Markdown reading small, safe, and personal.
 
 1. Create a focused branch.
 2. Add or update tests for behavior and abuse cases.
-3. Run:
+3. Install the development-only browser dependency and run:
 
    ```powershell
+   npm ci --ignore-scripts
    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\run-tests.ps1
    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\verify-vendor.ps1
    ```

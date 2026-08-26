@@ -8,11 +8,14 @@ $edgeCandidates = @(
 )
 $edge = $edgeCandidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
 if (-not $edge) { throw 'Microsoft Edge is required for the browser security test.' }
+$node = Get-Command node -ErrorAction SilentlyContinue
+if (-not $node) { throw 'Node.js is required for the browser security test.' }
+if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'node_modules\playwright-core') -PathType Container)) {
+    throw 'Browser test dependency is missing. Run npm ci before running the test suite.'
+}
 
 $testRoot = Join-Path $repoRoot ('work\test-browser-' + [guid]::NewGuid().ToString('N'))
 $readyFile = Join-Path $testRoot 'ready.txt'
-$domFile = Join-Path $testRoot 'dom.html'
-$errorFile = Join-Path $testRoot 'edge-errors.txt'
 New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
 $server = $null
 try {
@@ -22,20 +25,8 @@ try {
     while (-not (Test-Path -LiteralPath $readyFile -PathType Leaf) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 100 }
     Assert-True (Test-Path -LiteralPath $readyFile -PathType Leaf) 'Browser-test server did not become ready.'
     $url = [IO.File]::ReadAllText($readyFile).Trim()
-    $edgeArguments = @('--headless=new','--disable-gpu','--disable-extensions','--no-first-run',('--user-data-dir=' + (Join-Path $testRoot 'edge-profile')),'--dump-dom',$url)
-    $browser = Start-Process -FilePath $edge -ArgumentList $edgeArguments -WindowStyle Hidden -RedirectStandardOutput $domFile -RedirectStandardError $errorFile -Wait -PassThru
-    Assert-True ($browser.ExitCode -eq 0) 'Headless Edge failed to render the hostile fixture.'
-    $dom = [IO.File]::ReadAllText($domFile, [Text.Encoding]::UTF8)
-    $match = [regex]::Match($dom, '(?s)<article[^>]*id="content"[^>]*>(.*?)</article>')
-    Assert-True $match.Success 'Rendered Markdown article was not found in the browser DOM.'
-    $article = $match.Groups[1].Value
-    Assert-True (-not ($dom -match 'data-pwned')) 'Hostile Markdown executed and changed the document.'
-    foreach ($blockedPattern in @('(?i)<script','(?i)<iframe','(?i)<svg','(?i)\sonerror=','(?i)\sonload=','(?i)javascript:','(?i)file:///','(?i)example\.com/tracker\.png')) {
-        Assert-True (-not ($article -match $blockedPattern)) "Active HTML or unsafe URL survived sanitization: $blockedPattern"
-    }
-    $articleText = [Net.WebUtility]::HtmlDecode([regex]::Replace($article, '<[^>]+>', ''))
-    Assert-True ($articleText.Contains('This is code and must stay visible as text.')) 'Safe code content should remain visible.'
-    Assert-True ($articleText.Contains('Unsafe JavaScript link')) 'Unsafe links should remain readable after their navigation is removed.'
+    & $node.Source (Join-Path $PSScriptRoot 'browser-security.mjs') $edge $url
+    if ($LASTEXITCODE -ne 0) { throw 'Headless Edge browser security assertions failed.' }
     Write-Host 'Browser sanitization tests passed.' -ForegroundColor Green
 }
 finally {
