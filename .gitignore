@@ -1,0 +1,10 @@
+dist/
+work/
+output/
+.playwright-cli/
+*.exe
+*.sha256
+*.user
+*.log
+.DS_Store
+Thumbs.db
