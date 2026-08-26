@@ -1,0 +1,45 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        shell: powershell
+        run: .\tests\run-tests.ps1
+
+      - name: Verify vendored dependencies
+        shell: powershell
+        run: .\tools\verify-vendor.ps1
+
+      - name: Build installer
+        shell: powershell
+        run: .\tools\build-installer.ps1
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkLens-Windows-Setup
+          path: |
+            dist/MarkLens-Setup-v*.exe
+            dist/MarkLens-Setup-v*.exe.sha256
+          if-no-files-found: error
+
+      - name: Publish tagged GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create $env:GITHUB_REF_NAME .\dist\MarkLens-Setup-v*.exe .\dist\MarkLens-Setup-v*.exe.sha256 --verify-tag --generate-notes --title "MarkLens $env:GITHUB_REF_NAME"
