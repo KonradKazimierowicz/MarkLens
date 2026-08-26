@@ -8,7 +8,7 @@ MarkLens assumes every opened Markdown file, imported configuration, path, and u
 |---|---|---|
 | Markdown → HTML | script execution, event handlers, iframes, unsafe URLs, DOM clobbering | Marked output passes through DOMPurify; active tags/attributes are forbidden; links and images get a second protocol/path pass. |
 | Viewer → local API | cross-site requests altering settings or logo | random per-view 256-bit header token, same-origin requests, fixed routes, small request limits, no CORS. |
-| Relative image → disk | path traversal, arbitrary file read, oversized files, SVG active content | canonical path must remain below the source directory; raster extension allowlist; 10 MB cap; no SVG. |
+| Relative image → disk | path traversal, junction/symlink escape, arbitrary file read, oversized files, SVG active content | canonical path must remain below the source directory; reparse points are rejected; raster extension allowlist; 10 MB cap; no SVG. |
 | Imported JSON → CSS/UI | CSS injection, path injection, memory abuse | 256 KB cap, strict property allowlist, hex colors, enums, numeric clamps, fixed logo names, preset count/name limits. |
 | Browser viewer → network | tracking images, silent requests, embedded remote pages | CSP `default-src 'none'`, `connect-src 'self'`, `img-src 'self' data:`, no frames/objects, remote images removed. |
 | Loopback socket → host | LAN exposure, request smuggling, denial of service | bind only `127.0.0.1`, random high port, 32 KB header/3 MB body caps, no chunked encoding, read timeouts, 24-hour idle ceiling. |

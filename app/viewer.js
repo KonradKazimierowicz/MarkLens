@@ -40,7 +40,9 @@
     ['background', 'Page background'], ['surface', 'Document surface'], ['surfaceAlt', 'Secondary surface'],
     ['text', 'Body text'], ['muted', 'Muted text'], ['heading', 'Headings'], ['link', 'Links'],
     ['accent', 'Accent'], ['border', 'Borders'], ['codeBackground', 'Code blocks'], ['codeText', 'Code text'],
-    ['inlineCodeBackground', 'Inline code'], ['quoteBackground', 'Quotes'], ['tableStripe', 'Table stripes'], ['scrollbar', 'Scrollbar']
+    ['inlineCodeBackground', 'Inline code'], ['quoteBackground', 'Quotes'], ['tableStripe', 'Table stripes'], ['scrollbar', 'Scrollbar'],
+    ['danger', 'Warnings'], ['syntaxComment', 'Syntax: comments'], ['syntaxKeyword', 'Syntax: keywords'], ['syntaxString', 'Syntax: strings'],
+    ['syntaxNumber', 'Syntax: numbers'], ['syntaxTitle', 'Syntax: titles'], ['syntaxAttribute', 'Syntax: attributes'], ['syntaxBuiltin', 'Syntax: built-ins']
   ];
   var fontChoices = ['Segoe UI', 'Arial', 'Calibri', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Cascadia Mono', 'Consolas'];
   var fontStacks = {
@@ -52,7 +54,9 @@
     background: '--reader-bg', surface: '--reader-surface', surfaceAlt: '--reader-surface-alt', text: '--reader-text',
     muted: '--reader-muted', heading: '--reader-heading', link: '--reader-link', accent: '--reader-accent', border: '--reader-border',
     codeBackground: '--reader-code-bg', codeText: '--reader-code-text', inlineCodeBackground: '--reader-inline-code-bg',
-    quoteBackground: '--reader-quote-bg', tableStripe: '--reader-table-stripe', scrollbar: '--reader-scrollbar'
+    quoteBackground: '--reader-quote-bg', tableStripe: '--reader-table-stripe', scrollbar: '--reader-scrollbar', danger: '--reader-danger',
+    syntaxComment: '--reader-syntax-comment', syntaxKeyword: '--reader-syntax-keyword', syntaxString: '--reader-syntax-string',
+    syntaxNumber: '--reader-syntax-number', syntaxTitle: '--reader-syntax-title', syntaxAttribute: '--reader-syntax-attribute', syntaxBuiltin: '--reader-syntax-builtin'
   };
 
   function deepClone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -118,7 +122,7 @@
     root.style.setProperty('--reader-padding', state.layout.contentPadding + 'px');
     root.style.setProperty('--reader-block-spacing', String(state.layout.blockSpacing));
     root.style.setProperty('--reader-radius', state.components.radius + 'px');
-    root.style.setProperty('--reader-shadow', { none: 'none', soft: '0 12px 34px rgba(16,24,40,.08)', medium: '0 18px 48px rgba(16,24,40,.16)' }[state.components.shadow]);
+    root.style.setProperty('--reader-shadow', { none: 'none', soft: '0 12px 34px color-mix(in srgb, var(--reader-text) 8%, transparent)', medium: '0 18px 48px color-mix(in srgb, var(--reader-text) 16%, transparent)' }[state.components.shadow]);
     root.style.setProperty('--reader-scrollbar-width', { thin: '7px', regular: '10px', wide: '14px' }[state.components.scrollbarWidth]);
     root.setAttribute('data-quote-style', state.components.quoteStyle);
     root.setAttribute('data-table-style', state.components.tableStyle);
@@ -144,7 +148,7 @@
       elements.favicon.href = '/api/logo?v=' + encodeURIComponent(state.branding.logoFile);
     } else {
       elements.favicon.type = 'image/svg+xml';
-      elements.favicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M15 19h8l9 12 9-12h8v26h-8V31L32 43 23 31v14h-8z' fill='white'/%3E%3C/svg%3E";
+      elements.favicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23" + palette.accent.substring(1) + "'/%3E%3Cpath d='M15 19h8l9 12 9-12h8v26h-8V31L32 43 23 31v14h-8z' fill='%23" + palette.surface.substring(1) + "'/%3E%3C/svg%3E";
     }
 
     var tocVisible = state.behavior.showTableOfContents;

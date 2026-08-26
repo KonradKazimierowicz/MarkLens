@@ -17,7 +17,15 @@
       "inlineCodeBackground": "#eef2f6",
       "quoteBackground": "#f8fafc",
       "tableStripe": "#f8fafc",
-      "scrollbar": "#98a2b3"
+      "scrollbar": "#98a2b3",
+      "danger": "#b42318",
+      "syntaxComment": "#7d8590",
+      "syntaxKeyword": "#cf222e",
+      "syntaxString": "#0a7b51",
+      "syntaxNumber": "#953800",
+      "syntaxTitle": "#0550ae",
+      "syntaxAttribute": "#8250df",
+      "syntaxBuiltin": "#116329"
     },
     "dark": {
       "background": "#0e1116",
@@ -34,7 +42,15 @@
       "inlineCodeBackground": "#252c36",
       "quoteBackground": "#1a2029",
       "tableStripe": "#1b222c",
-      "scrollbar": "#667085"
+      "scrollbar": "#667085",
+      "danger": "#f97066",
+      "syntaxComment": "#8b949e",
+      "syntaxKeyword": "#ff7b72",
+      "syntaxString": "#a5d6ff",
+      "syntaxNumber": "#ffa657",
+      "syntaxTitle": "#d2a8ff",
+      "syntaxAttribute": "#79c0ff",
+      "syntaxBuiltin": "#7ee787"
     }
   },
   "typography": {
@@ -69,7 +85,7 @@
     "useLogoAsFavicon": true
   },
   "behavior": {
-    "showTableOfContents": true,
+    "showTableOfContents": false,
     "autoHideToolbar": false
   },
   "customPresets": []

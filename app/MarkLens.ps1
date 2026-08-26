@@ -145,6 +145,28 @@ function Test-MarkLensMutationToken {
     return $difference -eq 0
 }
 
+function Confirm-MarkLensMutationToken {
+    param([IO.Stream]$Stream, $Request, [string]$Token)
+    if (Test-MarkLensMutationToken $Request $Token) { return $true }
+    Write-MarkLensHttpResponse -Stream $Stream -Status 403 -Body ([Text.Encoding]::UTF8.GetBytes('Invalid request token.'))
+    return $false
+}
+
+function Test-MarkLensPathHasReparsePoint {
+    param([string]$Root, [string]$RelativePath)
+    $cursor = [IO.Path]::GetFullPath($Root)
+    foreach ($segment in $RelativePath.Split(@('\','/'), [StringSplitOptions]::RemoveEmptyEntries)) {
+        if ($segment -eq '.') { continue }
+        if ($segment -eq '..') { return $true }
+        $cursor = Join-Path $cursor $segment
+        if (Test-Path -LiteralPath $cursor) {
+            $item = Get-Item -LiteralPath $cursor -Force
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { return $true }
+        }
+    }
+    return $false
+}
+
 function Get-MarkLensMimeType {
     param([string]$Extension)
     switch ($Extension.ToLowerInvariant()) {
@@ -218,7 +240,7 @@ try {
                 Write-MarkLensHttpResponse -Stream $stream -ContentType 'application/json; charset=utf-8' -Body (ConvertTo-MarkLensJsonBytes (Read-MarkLensSettings -DataRoot $dataPaths.Root))
             }
             elseif ($request.Method -eq 'PUT' -and $route -eq '/api/settings') {
-                if (-not (Test-MarkLensMutationToken $request $token)) { Write-MarkLensHttpResponse -Stream $stream -Status 403 -Body ([Text.Encoding]::UTF8.GetBytes('Invalid request token.')); continue }
+                if (-not (Confirm-MarkLensMutationToken $stream $request $token)) { continue }
                 if ($request.Body.Length -gt 256KB) { Write-MarkLensHttpResponse -Stream $stream -Status 413 -Body ([Text.Encoding]::UTF8.GetBytes('Settings exceed 256 KB.')); continue }
                 try {
                     $candidate = ConvertTo-MarkLensHashtable (ConvertFrom-Json ([Text.Encoding]::UTF8.GetString($request.Body)) -ErrorAction Stop)
@@ -235,7 +257,7 @@ try {
                 Write-MarkLensHttpResponse -Stream $stream -ContentType (Get-MarkLensMimeType ([IO.Path]::GetExtension($logoName))) -Body ([IO.File]::ReadAllBytes($logoPath))
             }
             elseif ($request.Method -eq 'POST' -and $route -eq '/api/logo') {
-                if (-not (Test-MarkLensMutationToken $request $token)) { Write-MarkLensHttpResponse -Stream $stream -Status 403 -Body ([Text.Encoding]::UTF8.GetBytes('Invalid request token.')); continue }
+                if (-not (Confirm-MarkLensMutationToken $stream $request $token)) { continue }
                 try {
                     $payload = ConvertFrom-Json ([Text.Encoding]::UTF8.GetString($request.Body)) -ErrorAction Stop
                     if ($payload.type -notin @('image/png','image/jpeg')) { throw 'Only PNG and JPEG logos are supported.' }
@@ -252,7 +274,7 @@ try {
                 } catch { Write-MarkLensHttpResponse -Stream $stream -Status 400 -Body ([Text.Encoding]::UTF8.GetBytes($_.Exception.Message)) }
             }
             elseif ($request.Method -eq 'DELETE' -and $route -eq '/api/logo') {
-                if (-not (Test-MarkLensMutationToken $request $token)) { Write-MarkLensHttpResponse -Stream $stream -Status 403 -Body ([Text.Encoding]::UTF8.GetBytes('Invalid request token.')); continue }
+                if (-not (Confirm-MarkLensMutationToken $stream $request $token)) { continue }
                 foreach ($name in @('logo.png','logo.jpg','logo.jpeg')) { $logoPath = Join-Path $dataPaths.Assets $name; if (Test-Path -LiteralPath $logoPath) { Remove-Item -LiteralPath $logoPath -Force } }
                 $settings = ConvertTo-MarkLensHashtable (Read-MarkLensSettings -DataRoot $dataPaths.Root)
                 $settings.branding.logoFile = $null; $settings.branding.showLogo = $false
@@ -264,6 +286,7 @@ try {
                     if ($targetParts.Count -ne 2 -or $targetParts[1] -notmatch '^path=(.*)$') { throw 'Missing asset path.' }
                     $relative = [Uri]::UnescapeDataString($Matches[1]).Replace('/', [IO.Path]::DirectorySeparatorChar)
                     if ([IO.Path]::IsPathRooted($relative)) { throw 'Absolute asset paths are blocked.' }
+                    if (Test-MarkLensPathHasReparsePoint -Root $document.Directory -RelativePath $relative) { throw 'Reparse-point assets are blocked.' }
                     $assetPath = [IO.Path]::GetFullPath((Join-Path $document.Directory $relative))
                     $documentRoot = [IO.Path]::GetFullPath($document.Directory).TrimEnd('\') + '\'
                     if (-not $assetPath.StartsWith($documentRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'Asset path leaves the document folder.' }
@@ -275,7 +298,7 @@ try {
                 } catch { Write-MarkLensHttpResponse -Stream $stream -Status 404 -Body ([Text.Encoding]::UTF8.GetBytes('Local image unavailable.')) }
             }
             elseif ($request.Method -eq 'POST' -and $route -eq '/api/shutdown') {
-                if (-not (Test-MarkLensMutationToken $request $token)) { Write-MarkLensHttpResponse -Stream $stream -Status 403 -Body ([Text.Encoding]::UTF8.GetBytes('Invalid request token.')); continue }
+                if (-not (Confirm-MarkLensMutationToken $stream $request $token)) { continue }
                 $shutdownAfter = (Get-Date).AddSeconds(2)
                 Write-MarkLensHttpResponse -Stream $stream -Status 204 -ContentType 'text/plain' -Body @()
             }

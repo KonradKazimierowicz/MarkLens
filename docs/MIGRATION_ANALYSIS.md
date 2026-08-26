@@ -2,6 +2,10 @@
 
 This document records the stage-one review of the original branded reader and the decisions used to create the independent MarkLens repository. The source repository remains unchanged.
 
+## Naming decision
+
+The neutral candidates considered before the refactor were **MarkLens**, **PlainMD**, **Leafmark**, **Inkdown**, **OpenMark Reader**, **MicaMark**, **Readleaf**, and **MarkNest**. MarkLens was selected because it is short, memorable, clearly suggests looking through Markdown rather than editing it, works as both an application and repository name, and does not tie the product to an organization or visual style.
+
 ## Files reviewed
 
 | Source file or mechanism | Finding | MarkLens decision |

@@ -5,9 +5,16 @@ function Assert-True { param([bool]$Condition, [string]$Message) if (-not $Condi
 $testRoot = Join-Path $repoRoot ('work\test-server-' + [guid]::NewGuid().ToString('N'))
 $readyFile = Join-Path $testRoot 'ready.txt'
 New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
+$documentRoot = Join-Path $testRoot 'document'
+$outsideRoot = Join-Path $testRoot 'outside'
+New-Item -ItemType Directory -Path $documentRoot,$outsideRoot -Force | Out-Null
+$documentPath = Join-Path $documentRoot 'security-demo.md'
+Copy-Item -LiteralPath (Join-Path $repoRoot 'sample\security-demo.md') -Destination $documentPath
+[IO.File]::WriteAllBytes((Join-Path $outsideRoot 'secret.png'), [byte[]](0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a))
+New-Item -ItemType Junction -Path (Join-Path $documentRoot 'linked') -Target $outsideRoot | Out-Null
 $process = $null
 try {
-    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',(Join-Path $repoRoot 'sample\security-demo.md'),'-DataRoot',$testRoot,'-NoBrowser','-ReadyFile',$readyFile)
+    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',$documentPath,'-DataRoot',$testRoot,'-NoBrowser','-ReadyFile',$readyFile)
     $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $deadline = (Get-Date).AddSeconds(12)
     while (-not (Test-Path -LiteralPath $readyFile -PathType Leaf) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 100 }
@@ -34,6 +41,11 @@ try {
     try { Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/document-asset?path=..%2F..%2FWindows%2Fwin.ini') | Out-Null }
     catch { $assetStatus = [int]$_.Exception.Response.StatusCode }
     Assert-True ($assetStatus -eq 404) 'Document assets must not escape the source directory.'
+
+    $junctionStatus = 0
+    try { Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/document-asset?path=linked%2Fsecret.png') | Out-Null }
+    catch { $junctionStatus = [int]$_.Exception.Response.StatusCode }
+    Assert-True ($junctionStatus -eq 404) 'Document assets must not escape through a junction or symlink.'
 
     Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/shutdown') -Method Post -Headers @{ 'X-MarkLens-Token'=$token } | Out-Null
     $process.WaitForExit(7000) | Out-Null

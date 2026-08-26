@@ -100,7 +100,11 @@ function Get-MarkLensValidatedSettings {
     if ($null -eq $Candidate) { $Candidate = @{} }
     $defaults = Get-MarkLensDefaultSettings
     $fontChoices = @('Segoe UI', 'Arial', 'Calibri', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Cascadia Mono', 'Consolas')
-    $paletteKeys = @('background', 'surface', 'surfaceAlt', 'text', 'muted', 'heading', 'link', 'accent', 'border', 'codeBackground', 'codeText', 'inlineCodeBackground', 'quoteBackground', 'tableStripe', 'scrollbar')
+    $paletteKeys = @(
+        'background', 'surface', 'surfaceAlt', 'text', 'muted', 'heading', 'link', 'accent', 'border',
+        'codeBackground', 'codeText', 'inlineCodeBackground', 'quoteBackground', 'tableStripe', 'scrollbar', 'danger',
+        'syntaxComment', 'syntaxKeyword', 'syntaxString', 'syntaxNumber', 'syntaxTitle', 'syntaxAttribute', 'syntaxBuiltin'
+    )
 
     $result = [ordered]@{
         schemaVersion = 1

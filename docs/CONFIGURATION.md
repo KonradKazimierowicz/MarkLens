@@ -5,7 +5,7 @@ MarkLens validates every imported or saved value and writes normalized JSON. The
 ## Groups
 
 - `theme.mode`: `auto`, `light`, or `dark`.
-- `theme.light` / `theme.dark`: six-digit hex values for page, surfaces, text, headings, links, accent, borders, code, quotes, tables, and scrollbar.
+- `theme.light` / `theme.dark`: six-digit hex values for page, surfaces, text, headings, links, accent, borders, code, syntax tokens, warnings, quotes, tables, and scrollbar.
 - `typography`: an allowlisted Windows font, text size `12–24`, line height `1.2–2.2`, and heading scale `0.85–1.35`.
 - `layout`: document width `560–1600`, padding `12–72`, and block spacing `0.6–2.5`.
 - `components`: radius `0–28` plus enum styles for shadow, quotes, tables, separators, and scrollbar.

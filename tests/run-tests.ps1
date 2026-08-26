@@ -3,6 +3,7 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 
 & (Join-Path $PSScriptRoot 'Test-Core.ps1')
 & (Join-Path $PSScriptRoot 'Test-Server.ps1')
+& (Join-Path $PSScriptRoot 'Test-BrowserSecurity.ps1')
 
 $node = Get-Command node -ErrorAction SilentlyContinue
 if ($node) {
