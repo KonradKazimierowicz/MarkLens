@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "mode": "auto",
+    "light": {
+      "background": "#f4f6f8",
+      "surface": "#ffffff",
+      "surfaceAlt": "#f7f8fa",
+      "text": "#24292f",
+      "muted": "#667085",
+      "heading": "#101828",
+      "link": "#175cd3",
+      "accent": "#2563eb",
+      "border": "#d0d5dd",
+      "codeBackground": "#f6f8fa",
+      "codeText": "#1f2937",
+      "inlineCodeBackground": "#eef2f6",
+      "quoteBackground": "#f8fafc",
+      "tableStripe": "#f8fafc",
+      "scrollbar": "#98a2b3"
+    },
+    "dark": {
+      "background": "#0e1116",
+      "surface": "#161b22",
+      "surfaceAlt": "#1c222b",
+      "text": "#d7dde5",
+      "muted": "#98a2b3",
+      "heading": "#f2f4f7",
+      "link": "#84adff",
+      "accent": "#528bff",
+      "border": "#344054",
+      "codeBackground": "#11161d",
+      "codeText": "#e5e7eb",
+      "inlineCodeBackground": "#252c36",
+      "quoteBackground": "#1a2029",
+      "tableStripe": "#1b222c",
+      "scrollbar": "#667085"
+    }
+  },
+  "typography": {
+    "fontBody": "Segoe UI",
+    "fontHeading": "Segoe UI",
+    "fontCode": "Cascadia Mono",
+    "fontSize": 16,
+    "lineHeight": 1.7,
+    "headingScale": 1.0
+  },
+  "layout": {
+    "maxWidth": 920,
+    "contentPadding": 36,
+    "blockSpacing": 1.0
+  },
+  "components": {
+    "radius": 12,
+    "shadow": "soft",
+    "quoteStyle": "line",
+    "tableStyle": "striped",
+    "separatorStyle": "fade",
+    "scrollbarWidth": "regular"
+  },
+  "branding": {
+    "showHeader": true,
+    "showLogo": false,
+    "showFileName": true,
+    "showFilePath": false,
+    "title": "MarkLens",
+    "workspace": "Markdown Reader",
+    "logoFile": null,
+    "useLogoAsFavicon": true
+  },
+  "behavior": {
+    "showTableOfContents": true,
+    "autoHideToolbar": false
+  },
+  "customPresets": []
+}

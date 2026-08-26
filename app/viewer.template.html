@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-__MARKLENS_NONCE__'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'">
+  <title>MarkLens</title>
+  <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M15 19h8l9 12 9-12h8v26h-8V31L32 43 23 31v14h-8z' fill='white'/%3E%3C/svg%3E">
+  <style>/*__MARKLENS_CSS__*/</style>
+</head>
+<body>
+  <div class="topbar-reveal-zone" id="topbarRevealZone" aria-hidden="true"></div>
+  <header class="topbar" id="topbar">
+    <div class="progress" aria-hidden="true"><div class="progress__fill" id="progressBar"></div></div>
+    <div class="topbar__inner">
+      <div class="identity">
+        <img class="identity__logo" id="brandLogo" alt="">
+        <div class="identity__brand" id="brandBlock">
+          <strong id="brandTitle">MarkLens</strong>
+          <span id="brandWorkspace">Markdown Reader</span>
+        </div>
+        <span class="identity__divider" id="identityDivider" aria-hidden="true"></span>
+        <div class="identity__document" id="documentBlock">
+          <strong id="documentName"></strong>
+          <span id="documentPath"></span>
+        </div>
+      </div>
+      <nav class="toolbar" aria-label="Reader tools">
+        <button class="icon-button" id="tocToggle" type="button" title="Toggle table of contents" aria-label="Toggle table of contents" aria-expanded="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h2v2H4zm4 0h12v2H8zM4 11h2v2H4zm4 0h12v2H8zM4 16h2v2H4zm4 0h12v2H8z"/></svg>
+        </button>
+        <button class="icon-button" id="reloadButton" type="button" title="Reload source" aria-label="Reload source">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
+        </button>
+        <button class="icon-button" id="themeToggle" type="button" title="Toggle light/dark" aria-label="Toggle light/dark">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.91-.1-1.35A7 7 0 0 1 13.35 3.1C12.91 3.04 12.46 3 12 3z"/></svg>
+        </button>
+        <button class="icon-button" id="copyPathButton" type="button" title="Copy source path" aria-label="Copy source path">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11z"/></svg>
+        </button>
+        <button class="icon-button" id="settingsButton" type="button" title="Appearance settings" aria-label="Open appearance settings" aria-haspopup="dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.1 7.1 0 0 0-1.62-.94L14.4 2.8a.48.48 0 0 0-.48-.4h-3.84a.48.48 0 0 0-.48.4l-.36 2.54c-.58.24-1.12.56-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.72 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.31.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.04.23.24.4.48.4h3.84c.24 0 .44-.17.48-.4l.36-2.54c.58-.24 1.12-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="reader-layout" id="readerLayout">
+    <aside class="toc" id="tocPanel" aria-label="Table of contents">
+      <div class="toc__heading">On this page</div>
+      <nav id="tocList"></nav>
+    </aside>
+    <main class="content-shell">
+      <article class="markdown-body" id="content" aria-live="polite"></article>
+      <footer class="reader-footer">Rendered locally by <span id="footerName">MarkLens</span>. Your document never leaves this computer.</footer>
+    </main>
+  </div>
+  <div class="toc-overlay" id="tocOverlay"></div>
+
+  <div class="settings-overlay" id="settingsOverlay"></div>
+  <aside class="settings" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true">
+    <div class="settings__header">
+      <div><span class="eyebrow">Settings</span><h2 id="settingsTitle">Appearance</h2></div>
+      <button class="icon-button" id="settingsClose" type="button" aria-label="Close settings">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"/></svg>
+      </button>
+    </div>
+
+    <div class="settings__body" id="settingsBody">
+      <section class="settings-section">
+        <div class="section-heading"><h3>Theme preset</h3><span id="saveStatus" role="status">Saved locally</span></div>
+        <label class="field"><span>Preset</span><select id="presetSelect"></select></label>
+        <div class="button-row">
+          <button class="secondary-button" id="savePresetButton" type="button">Save as custom</button>
+          <button class="secondary-button danger" id="deletePresetButton" type="button" disabled>Delete custom</button>
+        </div>
+        <label class="field"><span>Theme mode</span><select data-setting="theme.mode">
+          <option value="auto">Auto (system)</option><option value="light">Light</option><option value="dark">Dark</option>
+        </select></label>
+      </section>
+
+      <section class="settings-section">
+        <h3>Colors</h3>
+        <details open><summary>Light palette</summary><div class="color-grid" id="lightColors"></div></details>
+        <details><summary>Dark palette</summary><div class="color-grid" id="darkColors"></div></details>
+      </section>
+
+      <section class="settings-section">
+        <h3>Typography</h3>
+        <div class="two-columns">
+          <label class="field"><span>Body font</span><select data-setting="typography.fontBody" data-font-select></select></label>
+          <label class="field"><span>Heading font</span><select data-setting="typography.fontHeading" data-font-select></select></label>
+        </div>
+        <label class="field"><span>Code font</span><select data-setting="typography.fontCode" data-font-select></select></label>
+        <label class="range-field"><span>Text size <output data-output="typography.fontSize"></output></span><input type="range" min="12" max="24" step="1" data-setting="typography.fontSize" data-number></label>
+        <label class="range-field"><span>Line height <output data-output="typography.lineHeight"></output></span><input type="range" min="1.2" max="2.2" step="0.05" data-setting="typography.lineHeight" data-number></label>
+        <label class="range-field"><span>Heading scale <output data-output="typography.headingScale"></output></span><input type="range" min="0.85" max="1.35" step="0.05" data-setting="typography.headingScale" data-number></label>
+      </section>
+
+      <section class="settings-section">
+        <h3>Layout</h3>
+        <label class="range-field"><span>Document width <output data-output="layout.maxWidth"></output></span><input type="range" min="560" max="1600" step="20" data-setting="layout.maxWidth" data-number></label>
+        <label class="range-field"><span>Inner padding <output data-output="layout.contentPadding"></output></span><input type="range" min="12" max="72" step="2" data-setting="layout.contentPadding" data-number></label>
+        <label class="range-field"><span>Vertical spacing <output data-output="layout.blockSpacing"></output></span><input type="range" min="0.6" max="2.5" step="0.05" data-setting="layout.blockSpacing" data-number></label>
+        <label class="range-field"><span>Corner radius <output data-output="components.radius"></output></span><input type="range" min="0" max="28" step="1" data-setting="components.radius" data-number></label>
+        <div class="two-columns">
+          <label class="field"><span>Shadow</span><select data-setting="components.shadow"><option value="none">None</option><option value="soft">Soft</option><option value="medium">Medium</option></select></label>
+          <label class="field"><span>Scrollbar</span><select data-setting="components.scrollbarWidth"><option value="thin">Thin</option><option value="regular">Regular</option><option value="wide">Wide</option></select></label>
+          <label class="field"><span>Quotes</span><select data-setting="components.quoteStyle"><option value="line">Line</option><option value="card">Card</option><option value="italic">Italic</option></select></label>
+          <label class="field"><span>Tables</span><select data-setting="components.tableStyle"><option value="lines">Lines</option><option value="striped">Striped</option><option value="minimal">Minimal</option></select></label>
+          <label class="field"><span>Separators</span><select data-setting="components.separatorStyle"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="fade">Fade</option></select></label>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Branding</h3>
+        <label class="switch-field"><input type="checkbox" data-setting="branding.showHeader"><span>Show header</span></label>
+        <label class="switch-field"><input type="checkbox" data-setting="branding.showFileName"><span>Show file name</span></label>
+        <label class="switch-field"><input type="checkbox" data-setting="branding.showFilePath"><span>Show full file path</span></label>
+        <label class="field"><span>Application name</span><input type="text" maxlength="80" data-setting="branding.title"></label>
+        <label class="field"><span>Workspace name</span><input type="text" maxlength="80" data-setting="branding.workspace"></label>
+        <label class="switch-field"><input type="checkbox" data-setting="branding.showLogo"><span>Show custom logo</span></label>
+        <label class="switch-field"><input type="checkbox" data-setting="branding.useLogoAsFavicon"><span>Use logo as document icon</span></label>
+        <label class="field file-field"><span>Logo (PNG or JPEG, max 2 MB)</span><input id="logoInput" type="file" accept="image/png,image/jpeg"></label>
+        <button class="secondary-button" id="removeLogoButton" type="button">Remove logo</button>
+      </section>
+
+      <section class="settings-section">
+        <h3>Reader behavior</h3>
+        <label class="switch-field"><input type="checkbox" data-setting="behavior.showTableOfContents"><span>Show table of contents</span></label>
+        <label class="switch-field"><input type="checkbox" data-setting="behavior.autoHideToolbar"><span>Auto-hide toolbar while scrolling</span></label>
+      </section>
+
+      <section class="settings-section">
+        <h3>Configuration</h3>
+        <p class="settings-note">Settings are stored on this computer. Export a JSON file to back them up or move them elsewhere.</p>
+        <div class="button-row wrap">
+          <button class="secondary-button" id="exportButton" type="button">Export JSON</button>
+          <button class="secondary-button" id="importButton" type="button">Import JSON</button>
+          <input id="importInput" type="file" accept="application/json,.json" hidden>
+          <button class="secondary-button danger" id="resetButton" type="button">Reset defaults</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script nonce="__MARKLENS_NONCE__">/*__MARKED_JS__*/</script>
+  <script nonce="__MARKLENS_NONCE__">/*__DOMPURIFY_JS__*/</script>
+  <script nonce="__MARKLENS_NONCE__">/*__HIGHLIGHT_JS__*/</script>
+  <script nonce="__MARKLENS_NONCE__">window.__MARKLENS_BOOTSTRAP__ = /*__MARKLENS_BOOTSTRAP_JSON__*/;</script>
+  <script nonce="__MARKLENS_NONCE__">/*__MARKLENS_APP_JS__*/</script>
+</body>
+</html>

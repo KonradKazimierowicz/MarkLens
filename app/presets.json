@@ -1,0 +1,72 @@
+[
+  {
+    "id": "default",
+    "name": "Default",
+    "description": "Balanced, calm, and familiar.",
+    "settings": {}
+  },
+  {
+    "id": "minimal-light",
+    "name": "Minimal Light",
+    "description": "A quiet white canvas with almost no decoration.",
+    "settings": {
+      "theme": { "mode": "light" },
+      "layout": { "maxWidth": 820, "contentPadding": 28 },
+      "components": { "radius": 4, "shadow": "none", "tableStyle": "minimal", "separatorStyle": "solid" }
+    }
+  },
+  {
+    "id": "minimal-dark",
+    "name": "Minimal Dark",
+    "description": "Low-contrast dark reading for focused sessions.",
+    "settings": {
+      "theme": { "mode": "dark", "dark": { "background": "#0b0c0f", "surface": "#0b0c0f", "surfaceAlt": "#15171c", "border": "#272a31", "accent": "#a78bfa", "link": "#c4b5fd" } },
+      "layout": { "maxWidth": 800, "contentPadding": 24 },
+      "components": { "radius": 0, "shadow": "none", "tableStyle": "minimal" }
+    }
+  },
+  {
+    "id": "github-like",
+    "name": "GitHub-like",
+    "description": "A familiar code-hosting-inspired document rhythm.",
+    "settings": {
+      "theme": { "light": { "background": "#ffffff", "surface": "#ffffff", "border": "#d0d7de", "link": "#0969da", "accent": "#0969da", "codeBackground": "#f6f8fa" }, "dark": { "background": "#0d1117", "surface": "#0d1117", "border": "#30363d", "link": "#58a6ff", "accent": "#58a6ff", "codeBackground": "#161b22" } },
+      "typography": { "fontBody": "Segoe UI", "fontHeading": "Segoe UI", "fontCode": "Consolas", "fontSize": 16, "lineHeight": 1.6 },
+      "layout": { "maxWidth": 980 },
+      "components": { "radius": 6, "shadow": "none", "quoteStyle": "line", "tableStyle": "lines" }
+    }
+  },
+  {
+    "id": "documentation",
+    "name": "Documentation",
+    "description": "Dense, structured, and optimized for reference material.",
+    "settings": {
+      "theme": { "light": { "accent": "#0e7490", "link": "#0e7490" }, "dark": { "accent": "#22d3ee", "link": "#67e8f9" } },
+      "typography": { "fontSize": 15, "lineHeight": 1.6 },
+      "layout": { "maxWidth": 1120, "contentPadding": 40, "blockSpacing": 0.85 },
+      "components": { "radius": 8, "shadow": "soft", "tableStyle": "lines" }
+    }
+  },
+  {
+    "id": "writer",
+    "name": "Writer",
+    "description": "Warm paper tones and generous long-form spacing.",
+    "settings": {
+      "theme": { "light": { "background": "#f4efe6", "surface": "#fffdf8", "surfaceAlt": "#f8f1e6", "text": "#342f2a", "heading": "#201c18", "accent": "#9a5b26", "link": "#8a4b1c", "border": "#dfd4c5", "quoteBackground": "#f8f1e6" }, "dark": { "background": "#171411", "surface": "#211d19", "surfaceAlt": "#29231e", "text": "#e8dfd3", "heading": "#fff7ed", "accent": "#e6a15c", "link": "#f0b777", "border": "#4a4036" } },
+      "typography": { "fontBody": "Georgia", "fontHeading": "Georgia", "fontSize": 18, "lineHeight": 1.85, "headingScale": 1.05 },
+      "layout": { "maxWidth": 760, "contentPadding": 48, "blockSpacing": 1.25 },
+      "components": { "radius": 2, "shadow": "soft", "quoteStyle": "italic", "tableStyle": "minimal" }
+    }
+  },
+  {
+    "id": "developer",
+    "name": "Developer",
+    "description": "Crisp contrast and compact spacing for technical notes.",
+    "settings": {
+      "theme": { "dark": { "background": "#0b1020", "surface": "#111827", "surfaceAlt": "#172033", "text": "#dbeafe", "heading": "#eff6ff", "accent": "#22d3ee", "link": "#67e8f9", "border": "#26344d", "codeBackground": "#070b14", "inlineCodeBackground": "#1e293b" } },
+      "typography": { "fontBody": "Segoe UI", "fontHeading": "Segoe UI", "fontCode": "Cascadia Mono", "fontSize": 15, "lineHeight": 1.65 },
+      "layout": { "maxWidth": 1080, "contentPadding": 32, "blockSpacing": 0.9 },
+      "components": { "radius": 8, "shadow": "medium", "quoteStyle": "card", "tableStyle": "striped", "scrollbarWidth": "thin" }
+    }
+  }
+]

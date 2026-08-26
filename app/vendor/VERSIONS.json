@@ -1,0 +1,20 @@
+{
+  "marked.umd.js": {
+    "package": "marked",
+    "version": "18.0.11",
+    "source": "https://www.npmjs.com/package/marked/v/18.0.11",
+    "sha256": "69451c8541c9c1e7a4bf3ffc6f73c4d89633de92bfbe3e484dfe182ef8091f88"
+  },
+  "purify.min.js": {
+    "package": "dompurify",
+    "version": "3.4.14",
+    "source": "https://www.npmjs.com/package/dompurify/v/3.4.14",
+    "sha256": "c2f26ea4fc0d88141c9aa430eb515ac86fce59418ceebd85fa475b87a8d6c3e6"
+  },
+  "highlight.min.js": {
+    "package": "@highlightjs/cdn-assets",
+    "version": "11.12.0",
+    "source": "https://www.npmjs.com/package/@highlightjs/cdn-assets/v/11.12.0",
+    "sha256": "8ab71eb09c51f501e5e25157d9cff100e46cc29bcbfc744d0b746d451fca7f53"
+  }
+}
