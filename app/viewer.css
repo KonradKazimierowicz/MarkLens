@@ -89,6 +89,8 @@ body.no-header .topbar, body.no-header .topbar-reveal-zone { display: none; }
 }
 .icon-button:hover { color: var(--reader-heading); background: var(--reader-surface-alt); border-color: var(--reader-border); }
 .icon-button svg { width: 19px; height: 19px; fill: currentColor; }
+.floating-settings { display: none; position: fixed; top: 14px; right: 14px; z-index: 70; color: var(--reader-muted); background: var(--reader-surface); border-color: var(--reader-border); box-shadow: var(--reader-shadow); }
+body.no-header .floating-settings { display: inline-grid; }
 
 .reader-layout { display: flex; align-items: flex-start; min-height: calc(100vh - var(--toolbar-height)); }
 .toc {
@@ -173,6 +175,6 @@ body.settings-open .settings-overlay { opacity: 1; pointer-events: auto; } body.
   :root { --toolbar-height: 60px; }.topbar__inner { padding: 0 10px; gap: 8px; }.identity__brand span, .identity__document span, .identity__divider { display: none; }.identity__brand strong, .identity__document strong { max-width: 26vw; font-size: 13px; }.toolbar { gap: 1px; }.icon-button { width: 34px; height: 34px; }.content-shell { padding: 10px; }.markdown-body { padding: max(18px, calc(var(--reader-padding) * .55)); border-radius: max(5px, calc(var(--reader-radius) * .7)); }.reader-footer { margin-bottom: 25px; }.two-columns, .color-grid { grid-template-columns: 1fr; }
 }
 @media print {
-  body { padding: 0; background: white; color: black; }.topbar, .toc, .toc-overlay, .settings, .settings-overlay, .reader-footer { display: none !important; }.content-shell { padding: 0; }.markdown-body { max-width: none; padding: 0; border: 0; box-shadow: none; background: white; color: black; }.markdown-body a { color: black; text-decoration: underline; }.markdown-body pre { white-space: pre-wrap; break-inside: avoid; }
+  body { padding: 0; background: white; color: black; }.topbar, .floating-settings, .toc, .toc-overlay, .settings, .settings-overlay, .reader-footer { display: none !important; }.content-shell { padding: 0; }.markdown-body { max-width: none; padding: 0; border: 0; box-shadow: none; background: white; color: black; }.markdown-body a { color: black; text-decoration: underline; }.markdown-body pre { white-space: pre-wrap; break-inside: avoid; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }

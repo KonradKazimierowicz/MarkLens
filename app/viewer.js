@@ -26,6 +26,7 @@
     settings: document.getElementById('settingsPanel'),
     settingsOverlay: document.getElementById('settingsOverlay'),
     settingsButton: document.getElementById('settingsButton'),
+    floatingSettingsButton: document.getElementById('floatingSettingsButton'),
     settingsClose: document.getElementById('settingsClose'),
     settingsBody: document.getElementById('settingsBody'),
     saveStatus: document.getElementById('saveStatus'),
@@ -322,7 +323,7 @@
   }
 
   function openSettings() { document.body.classList.add('settings-open'); elements.settings.setAttribute('aria-hidden', 'false'); elements.settingsClose.focus(); }
-  function closeSettings() { document.body.classList.remove('settings-open'); elements.settings.setAttribute('aria-hidden', 'true'); elements.settingsButton.focus(); }
+  function closeSettings() { document.body.classList.remove('settings-open'); elements.settings.setAttribute('aria-hidden', 'true'); (state.branding.showHeader ? elements.settingsButton : elements.floatingSettingsButton).focus(); }
 
   function applyPreset(id) {
     var preset = bootstrap.builtInPresets.concat(state.customPresets).find(function (item) { return item.id === id; });
@@ -334,7 +335,7 @@
   }
 
   function bindEvents() {
-    elements.settingsButton.addEventListener('click', openSettings); elements.settingsClose.addEventListener('click', closeSettings); elements.settingsOverlay.addEventListener('click', closeSettings);
+    elements.settingsButton.addEventListener('click', openSettings); elements.floatingSettingsButton.addEventListener('click', openSettings); elements.settingsClose.addEventListener('click', closeSettings); elements.settingsOverlay.addEventListener('click', closeSettings);
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && document.body.classList.contains('settings-open')) { closeSettings(); } });
     elements.settingsBody.addEventListener('input', function (event) {
       var input = event.target; var path = input.getAttribute('data-setting'); if (!path) { return; }
