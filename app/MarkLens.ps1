@@ -236,6 +236,11 @@ try {
                 $csp = "default-src 'none'; script-src 'nonce-$token'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'"
                 Write-MarkLensHttpResponse -Stream $stream -ContentType 'text/html; charset=utf-8' -Body $body -Headers @{ 'Content-Security-Policy' = $csp }
             }
+            elseif ($request.Method -eq 'GET' -and $route -eq '/favicon.ico') {
+                $faviconPath = Join-Path $PSScriptRoot 'marklens.ico'
+                if (-not (Test-Path -LiteralPath $faviconPath -PathType Leaf)) { Write-MarkLensHttpResponse -Stream $stream -Status 404 -Body @(); continue }
+                Write-MarkLensHttpResponse -Stream $stream -ContentType 'image/x-icon' -Body ([IO.File]::ReadAllBytes($faviconPath)) -Headers @{ 'Cache-Control' = 'public, max-age=86400' }
+            }
             elseif ($request.Method -eq 'GET' -and $route -eq '/api/settings') {
                 Write-MarkLensHttpResponse -Stream $stream -ContentType 'application/json; charset=utf-8' -Body (ConvertTo-MarkLensJsonBytes (Read-MarkLensSettings -DataRoot $dataPaths.Root))
             }
@@ -280,6 +285,14 @@ try {
                 $settings.branding.logoFile = $null; $settings.branding.showLogo = $false
                 $saved = Save-MarkLensSettings -Settings $settings -DataRoot $dataPaths.Root
                 Write-MarkLensHttpResponse -Stream $stream -ContentType 'application/json; charset=utf-8' -Body (ConvertTo-MarkLensJsonBytes $saved)
+            }
+            elseif ($request.Method -eq 'POST' -and $route -eq '/api/default-apps') {
+                if (-not (Confirm-MarkLensMutationToken $stream $request $token)) { continue }
+                try {
+                    Start-Process 'ms-settings:defaultapps?registeredAppUser=MarkLens' | Out-Null
+                    Write-MarkLensHttpResponse -Stream $stream -Status 204 -ContentType 'text/plain' -Body @()
+                }
+                catch { Write-MarkLensHttpResponse -Stream $stream -Status 500 -Body ([Text.Encoding]::UTF8.GetBytes('Could not open Windows Default Apps.')) }
             }
             elseif ($request.Method -eq 'GET' -and $route -eq '/api/document-asset') {
                 try {

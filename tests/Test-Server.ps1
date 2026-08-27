@@ -30,10 +30,20 @@ try {
     Assert-True ($page.Content -match '"csrfToken":"([^"]+)"') 'Bootstrap token is missing.'
     $token = $Matches[1]
 
+    $favicon = Invoke-WebRequest -UseBasicParsing -Uri ($url + 'favicon.ico')
+    Assert-True ($favicon.StatusCode -eq 200) 'Favicon endpoint should return HTTP 200.'
+    Assert-True ([string]$favicon.Headers['Content-Type'] -eq 'image/x-icon') 'Favicon endpoint should return an icon content type.'
+    Assert-True ($favicon.RawContentLength -gt 1000) 'Favicon endpoint should return the packaged multi-size icon.'
+
     $badStatus = 0
     try { Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/settings') -Method Put -Headers @{ 'X-MarkLens-Token'='wrong' } -ContentType 'application/json' -Body '{}' | Out-Null }
     catch { $badStatus = [int]$_.Exception.Response.StatusCode }
     Assert-True ($badStatus -eq 403) 'Mutating APIs must reject invalid CSRF tokens.'
+
+    $defaultAppsStatus = 0
+    try { Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/default-apps') -Method Post -Headers @{ 'X-MarkLens-Token'='wrong' } | Out-Null }
+    catch { $defaultAppsStatus = [int]$_.Exception.Response.StatusCode }
+    Assert-True ($defaultAppsStatus -eq 403) 'Default Apps launcher must reject invalid CSRF tokens.'
 
     $body = '{"theme":{"mode":"dark","light":{"background":"not-css"}},"branding":{"title":"Local Reader"}}'
     $saved = Invoke-RestMethod -Uri ($url + 'api/settings') -Method Put -Headers @{ 'X-MarkLens-Token'=$token } -ContentType 'application/json' -Body $body

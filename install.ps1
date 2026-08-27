@@ -2,7 +2,10 @@
 .SYNOPSIS
     Registers MarkLens for the current Windows user without administrator rights.
 #>
-param([string]$ApplicationRoot = $PSScriptRoot)
+param(
+    [string]$ApplicationRoot = $PSScriptRoot,
+    [switch]$OpenDefaultApps
+)
 
 $ErrorActionPreference = 'Stop'
 $ApplicationRoot = [IO.Path]::GetFullPath($ApplicationRoot)
@@ -24,6 +27,10 @@ New-Item -Path $progIdKey -Force | Out-Null
 Set-Item -Path $progIdKey -Value $label
 New-Item -Path "$progIdKey\DefaultIcon" -Force | Out-Null
 Set-Item -Path "$progIdKey\DefaultIcon" -Value ('"' + $iconPath + '"')
+New-Item -Path "$progIdKey\Application" -Force | Out-Null
+Set-ItemProperty -Path "$progIdKey\Application" -Name ApplicationName -Value 'MarkLens'
+Set-ItemProperty -Path "$progIdKey\Application" -Name ApplicationDescription -Value 'A local, customizable Markdown reader.'
+Set-ItemProperty -Path "$progIdKey\Application" -Name ApplicationIcon -Value ('"' + $iconPath + '"')
 New-Item -Path "$progIdKey\shell\open\command" -Force | Out-Null
 Set-Item -Path "$progIdKey\shell\open\command" -Value ('wscript.exe "' + $launcherPath + '" "%1"')
 
@@ -56,4 +63,8 @@ public static extern void SHChangeNotify(int eventId, int flags, IntPtr item1, I
 [MarkLensShell.Notify]::SHChangeNotify(0x08000000, 0x1000, [IntPtr]::Zero, [IntPtr]::Zero)
 
 Write-Host 'MarkLens was registered for .md and .markdown files for the current user.' -ForegroundColor Green
-Write-Host 'Windows may ask you to confirm MarkLens as the default app the first time.' -ForegroundColor Yellow
+Write-Host 'Windows requires you to confirm MarkLens as the default app.' -ForegroundColor Yellow
+if ($OpenDefaultApps) {
+    Start-Process 'ms-settings:defaultapps?registeredAppUser=MarkLens' | Out-Null
+    Write-Host 'Default Apps is open. Choose MarkLens for .md and .markdown.' -ForegroundColor Cyan
+}

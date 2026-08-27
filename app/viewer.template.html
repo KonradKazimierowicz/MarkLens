@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-__MARKLENS_NONCE__'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'">
   <title>MarkLens</title>
-  <link id="favicon" rel="icon" type="image/svg+xml">
+  <link id="favicon" rel="icon" type="image/x-icon" sizes="any" href="/favicon.ico">
   <style>/*__MARKLENS_CSS__*/</style>
 </head>
 <body>
@@ -50,8 +50,13 @@
   </button>
 
   <div class="reader-layout" id="readerLayout">
-    <aside class="toc" id="tocPanel" aria-label="Table of contents">
-      <div class="toc__heading">On this page</div>
+    <aside class="toc" id="tocPanel" aria-label="Table of contents" aria-hidden="true">
+      <div class="toc__header">
+        <div class="toc__title"><span>On this page</span><small id="tocCount"></small></div>
+        <button class="icon-button toc__close" id="tocClose" type="button" aria-label="Close table of contents">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"/></svg>
+        </button>
+      </div>
       <nav id="tocList"></nav>
     </aside>
     <main class="content-shell">
@@ -150,6 +155,8 @@
         <h3>Reader behavior</h3>
         <label class="switch-field"><input type="checkbox" data-setting="behavior.showTableOfContents"><span>Show table of contents</span></label>
         <label class="switch-field"><input type="checkbox" data-setting="behavior.autoHideToolbar"><span>Auto-hide toolbar while scrolling</span></label>
+        <p class="settings-note">Windows requires you to confirm file defaults. MarkLens can open the correct system page for you.</p>
+        <button class="secondary-button" id="setDefaultAppButton" type="button">Set MarkLens as default</button>
       </section>
 
       <section class="settings-section">

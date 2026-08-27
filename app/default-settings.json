@@ -86,7 +86,7 @@
   },
   "behavior": {
     "showTableOfContents": false,
-    "autoHideToolbar": false
+    "autoHideToolbar": true
   },
   "customPresets": []
 }

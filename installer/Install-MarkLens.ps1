@@ -29,7 +29,7 @@ try {
     New-Item -ItemType Directory -Path $InstallRoot -Force | Out-Null
     Get-ChildItem -LiteralPath $stageRoot -Force | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $InstallRoot -Recurse -Force }
     if (-not $SkipRegistration) {
-        & (Join-Path $InstallRoot 'install.ps1') -ApplicationRoot $InstallRoot
+        & (Join-Path $InstallRoot 'install.ps1') -ApplicationRoot $InstallRoot -OpenDefaultApps:(-not $Quiet)
         $version = [IO.File]::ReadAllText((Join-Path $InstallRoot 'VERSION')).Trim()
         $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MarkLens'
         $uninstallCommand = 'powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + (Join-Path $InstallRoot 'uninstall.ps1') + '" -RemoveFiles'
@@ -46,7 +46,7 @@ try {
         Set-ItemProperty -Path $uninstallKey -Name NoRepair -Value 1 -Type DWord
         Set-ItemProperty -Path $uninstallKey -Name EstimatedSize -Value $estimatedSize -Type DWord
     }
-    Show-MarkLensInstallerMessage -Title 'MarkLens' -Message "Installation completed.`r`n`r`nDouble-click a .md or .markdown file to read it with MarkLens."
+    Show-MarkLensInstallerMessage -Title 'MarkLens' -Message "Installation completed.`r`n`r`nIn Default Apps, choose MarkLens for .md and .markdown. Then double-click either file type to read it."
 }
 catch {
     if ($Quiet) { Write-Error $_.Exception.Message } else { Show-MarkLensInstallerMessage -Title 'MarkLens installation error' -Kind Error -Message $_.Exception.Message }
