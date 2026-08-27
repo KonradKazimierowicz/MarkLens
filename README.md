@@ -21,7 +21,7 @@ No account, advertisements, telemetry, cloud storage, administrator rights, or i
 
 Windows may ask which application should open Markdown the first time. Choose **MarkLens** and enable **Always**.
 
-> The installer may be unsigned. If SmartScreen appears, verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe.sha256), then select **More info → Run anyway**.
+> The version 1.0 installer is unsigned. SmartScreen may show a warning, while Smart App Control can block unsigned apps entirely. Verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe.sha256) and read [Troubleshooting](docs/TROUBLESHOOTING.md).
 
 Need more detail? Read the [installation guide](docs/INSTALLATION.md) or [troubleshooting guide](docs/TROUBLESHOOTING.md).
 
