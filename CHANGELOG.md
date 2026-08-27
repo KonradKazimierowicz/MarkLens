@@ -2,6 +2,13 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [1.1.1] - 2026-08-27
+
+### Changed
+
+- The clipboard action now copies the complete raw Markdown source instead of the local file path.
+- Updated the clipboard action label and confirmation message to describe the copied content accurately.
+
 ## [1.1.0] - 2026-08-27
 
 ### Added

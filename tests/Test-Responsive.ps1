@@ -1,5 +1,8 @@
+param([string]$ApplicationRoot)
+
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
+$runtimeRoot = if ([string]::IsNullOrWhiteSpace($ApplicationRoot)) { $repoRoot } else { [IO.Path]::GetFullPath($ApplicationRoot) }
 function Assert-True { param([bool]$Condition, [string]$Message) if (-not $Condition) { throw "ASSERTION FAILED: $Message" } }
 
 $edgeCandidates = @(
@@ -20,7 +23,7 @@ $sections = 1..45 | ForEach-Object { "## Section $_`r`n`r`nThis is a longer para
 [IO.File]::WriteAllText($documentPath, "# Responsive MarkLens document`r`n`r`n" + ($sections -join "`r`n"), (New-Object Text.UTF8Encoding($false)))
 $server = $null
 try {
-    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',$documentPath,'-DataRoot',(Join-Path $testRoot 'data'),'-NoBrowser','-ReadyFile',$readyFile)
+    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $runtimeRoot 'app\MarkLens.ps1'),'-Path',$documentPath,'-DataRoot',(Join-Path $testRoot 'data'),'-NoBrowser','-ReadyFile',$readyFile)
     $server = Start-Process -FilePath 'powershell.exe' -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $deadline = (Get-Date).AddSeconds(12)
     while (-not (Test-Path -LiteralPath $readyFile -PathType Leaf) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 100 }

@@ -21,6 +21,16 @@ try {
 
   assert(await page.locator('#reloadButton').count() === 0, 'The removed reload action should not remain in the toolbar.');
   assert(await page.locator('#printButton').isVisible(), 'Print / preview should be visible in the toolbar.');
+  assert(await page.locator('#copyPathButton').count() === 0, 'The old copy-path action should not remain in the toolbar.');
+  assert(await page.locator('#copyMarkdownButton').getAttribute('aria-label') === 'Copy full Markdown source', 'The copy action should describe the content copied.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(url).origin });
+  await page.locator('#copyMarkdownButton').click();
+  const clipboardResult = await page.evaluate(async () => {
+    const binary = atob(window.__MARKLENS_BOOTSTRAP__.document.markdownBase64);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    return { copied: await navigator.clipboard.readText(), source: new TextDecoder('utf-8').decode(bytes) };
+  });
+  assert(clipboardResult.copied === clipboardResult.source, 'Copy Markdown should copy the complete raw source file.');
 
   const favicon = await page.locator('#favicon').getAttribute('href');
   assert(favicon === '/favicon.ico', 'Default favicon should use the packaged MarkLens icon.');

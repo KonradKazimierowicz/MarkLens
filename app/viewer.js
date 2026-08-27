@@ -451,8 +451,8 @@
         window.print();
       });
     });
-    document.getElementById('copyPathButton').addEventListener('click', function () {
-      navigator.clipboard.writeText(bootstrap.document.fullPath).then(function () { showToast('Source path copied.'); }).catch(function () { showToast('Could not copy the source path.'); });
+    document.getElementById('copyMarkdownButton').addEventListener('click', function () {
+      navigator.clipboard.writeText(decodeMarkdown()).then(function () { showToast('Markdown source copied.'); }).catch(function () { showToast('Could not copy the Markdown source.'); });
     });
     elements.tocToggle.addEventListener('click', function () {
       if (narrowLayout.matches) { if (mobileTocOpen) { closeMobileToc(true); } else { openMobileToc(); } }
