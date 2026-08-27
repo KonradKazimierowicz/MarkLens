@@ -1,78 +1,94 @@
 # MarkLens
 
-**Download it, install it, double-click a Markdown file and read it beautifully. Customize the entire reader to your own style.**
+> **Markdown deserves a reader, not another editor tab.**
 
-MarkLens is a lightweight, local-first Markdown reader for Windows 10 and Windows 11. It opens `.md` and `.markdown` files from File Explorer, renders them with syntax highlighting, and presents the result in Microsoft Edge app mode. There are no accounts, ads, telemetry, cloud database, or required internet connection.
+![Windows 10 and 11](https://img.shields.io/badge/Windows-10%20%7C%2011-2563eb?style=flat-square)
+![PowerShell 5.1+](https://img.shields.io/badge/PowerShell-5.1%2B-334155?style=flat-square)
+![Local first](https://img.shields.io/badge/data-local%20only-16a34a?style=flat-square)
+![MIT License](https://img.shields.io/badge/license-MIT-f59e0b?style=flat-square)
 
-## What it does
+MarkLens turns a local `.md` file into a calm, polished reading view. Install it once, double-click Markdown in File Explorer, and read with no account, ads, telemetry, or cloud dependency.
 
-- opens Markdown files by double-click after per-user installation;
-- renders GitHub-flavored Markdown and highlighted code locally;
-- provides light, dark, and system-aware automatic modes;
-- exposes colors, fonts, width, text size, line height, spacing, corners, shadows, quotes, tables, separators, and scrollbar styling as settings;
-- supports neutral built-in presets plus create/delete custom presets;
-- imports and exports settings as JSON;
-- supports an optional PNG or JPEG logo, application name, workspace name, header visibility, and source-file visibility;
-- stores application files separately from settings, themes, assets, and cache;
-- installs and uninstalls without administrator rights.
+![MarkLens rendering an English Markdown document with its Appearance panel open](docs/images/marklens-reader.png)
+
+## A reader that gets out of the way
+
+- **Open naturally.** Register `.md` and `.markdown` for the current Windows user.
+- **Read beautifully.** Render GitHub-flavored Markdown, tables, task lists, quotes, and highlighted code.
+- **Make it yours.** Adjust the theme live, save custom presets, or move settings through JSON.
+- **Stay private.** Keep the document, configuration, and rendering on this computer.
+- **Install lightly.** Use a per-user installer with no administrator rights required.
+
+## Five colors, one decision
+
+The main Appearance view keeps color editing focused: **Background, Body text, Headings, Links, and Accent**. Change one color and MarkLens updates both light and dark modes together.
+
+Open **Advanced colors** when the two modes should differ. It reveals complete, independent light and dark palettes without crowding the everyday controls.
+
+Typography and layout follow the same idea. Common controls stay visible; heading fonts, code fonts, spacing, component styles, and other detailed choices live under **Advanced**.
+
+## Markdown in, beautiful reading out
+
+The included [demo document](sample/demo.md) shows both raw Markdown and its rendered result, including fenced code with syntax highlighting.
+
+````markdown
+## Release check
+
+- [x] Read the document locally
+- [x] Highlight fenced code
+
+```powershell
+Get-FileHash .\MarkLens-Setup-v1.0.0.exe -Algorithm SHA256
+```
+````
 
 ## Install
 
-1. Download `MarkLens-Setup-v1.0.0.exe` and its `.sha256` file from [GitHub Releases](https://github.com/KonradKazimierowicz/MarkLens/releases).
-2. Verify the checksum if desired:
+Download `MarkLens-Setup-v1.0.0.exe` and its `.sha256` file from [GitHub Releases](https://github.com/KonradKazimierowicz/MarkLens/releases), then run the installer.
 
-   ```powershell
-   Get-FileHash .\MarkLens-Setup-v1.0.0.exe -Algorithm SHA256
-   ```
+MarkLens installs to `%LOCALAPPDATA%\Programs\MarkLens` and registers file associations only for the current user. If Windows keeps an older default, choose **Open with → MarkLens → Always** once.
 
-3. Run the installer. MarkLens is installed to `%LOCALAPPDATA%\Programs\MarkLens` and registered only for the current user.
-4. Double-click a `.md` or `.markdown` file. If Windows keeps an older default application, use **Open with → Choose another app → MarkLens → Always** once.
+Verify the package when desired:
 
-For an unattended per-user installation, run `MarkLens-Setup-v1.0.0.exe /Q:U`.
+```powershell
+Get-FileHash .\MarkLens-Setup-v1.0.0.exe -Algorithm SHA256
+```
 
-The public installer is intentionally simple and may be unsigned. Windows SmartScreen can therefore show a reputation warning until signed builds are available.
+For an unattended per-user installation:
 
-## Make it yours
+```powershell
+.\MarkLens-Setup-v1.0.0.exe /Q:U
+```
 
-Open any document and select the gear button. The Appearance panel previews changes immediately and saves them outside the installation directory. Choose one of these starting points:
+The installer may be unsigned, so Windows SmartScreen can show a reputation warning until signed builds are available.
 
-- Default
-- Minimal Light
-- Minimal Dark
-- GitHub-like
-- Documentation
-- Writer
-- Developer
+## Privacy by architecture
 
-You can modify a preset, save it under a new name, delete custom presets, reset everything, or move the complete configuration through JSON export/import. SVG logos are deliberately not accepted in v1.0 because SVG can contain active or externally referencing content; PNG and JPEG are supported safely.
+Markdown content never leaves the computer. A small local bridge listens only on `127.0.0.1` and exists so the browser-based settings panel can save configuration safely.
+
+Marked renders Markdown, DOMPurify sanitizes the result, and a restrictive Content Security Policy blocks scripts, frames, objects, remote images, and network connections.
+
+Mutation endpoints require a random per-view token. Relative raster images are limited to the opened document directory; traversal, `file://`, SVG, active HTML, and `javascript:` links are blocked.
+
+Read [PRIVACY.md](PRIVACY.md) and the [security model](docs/SECURITY.md) for the complete details.
 
 ## Local data
 
+Updates replace the app while preserving settings and custom themes:
+
 ```text
 %LOCALAPPDATA%\MarkLens\
-├── config\
-│   └── settings.json
-├── themes\
-│   └── custom-presets.json
-├── assets\
-│   └── logo.png | logo.jpg
-└── cache\
-    └── view-<sha256-prefix>.html
+├── config\settings.json
+├── themes\custom-presets.json
+├── assets\logo.png | logo.jpg
+└── cache\view-<sha256-prefix>.html
 ```
 
-Updates replace application files in `%LOCALAPPDATA%\Programs\MarkLens` but preserve the data directory. A normal uninstall also preserves your settings; `uninstall.ps1 -RemoveUserData` is available when a complete cleanup is wanted.
+A regular uninstall keeps user data. Run `uninstall.ps1 -RemoveUserData` only when a complete cleanup is wanted.
 
-## Privacy and security
+## Develop locally
 
-Markdown content never leaves the computer. MarkLens serves each viewer from a random high port bound only to `127.0.0.1`; this small local bridge lets the settings panel write the configuration file. It is not a cloud backend and accepts no remote connections.
-
-Untrusted Markdown is rendered by Marked, sanitized by DOMPurify, and then inserted into the document. A restrictive Content Security Policy blocks scripts, frames, objects, remote images, and network connections. Mutation endpoints require a random per-view token. Relative raster images are served only from the opened document's directory, while `file://`, path traversal, external image fetching, SVG images, active HTML, and `javascript:` links are blocked by default. External web links open only after the user selects them.
-
-See [PRIVACY.md](PRIVACY.md) and [docs/SECURITY.md](docs/SECURITY.md) for the full model.
-
-## Developer quick start
-
-Runtime requirements: Windows 10/11, Windows PowerShell 5.1+, and Microsoft Edge. Contributors also need Node.js to run the real-browser security test; Node and Playwright are development-only and are not included in the installed application.
+Runtime requirements are Windows 10/11, Windows PowerShell 5.1+, and Microsoft Edge. Node.js is needed only for contributor browser tests.
 
 ```powershell
 git clone https://github.com/KonradKazimierowicz/MarkLens.git
@@ -81,52 +97,37 @@ npm ci --ignore-scripts
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MarkLens.ps1 -Path .\sample\demo.md
 ```
 
-Run the complete test suite:
+Run the full test and vendor checks:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\run-tests.ps1
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\verify-vendor.ps1
 ```
 
-Install directly from a source checkout:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
-```
-
-## Build the installer
-
-IExpress ships with supported Windows versions, so no heavyweight packaging framework is required.
+Build the installer locally:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\build-installer.ps1
 ```
 
-Outputs:
+The build produces the installer and checksum in `dist\`. Releases are prepared locally and uploaded manually; the project does not require GitHub Actions.
 
-```text
-dist\MarkLens-Setup-v1.0.0.exe
-dist\MarkLens-Setup-v1.0.0.exe.sha256
-```
-
-## Architecture
+## How it fits together
 
 ```text
 Markdown file
     ↓
-PowerShell core → validated user configuration
+PowerShell core → validated local settings
     ↓                         ↓
-cached viewer snapshot ← theme/preset engine
+cached viewer snapshot ← theme and preset engine
     ↓                         ↓
 DOMPurify → CSS variables → Microsoft Edge app mode
 ```
 
-The open-source core has no account, payment, sync, or marketplace dependencies. Future extension points operate on exported configuration and theme packages without changing the reader's local contract. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/MIGRATION_ANALYSIS.md](docs/MIGRATION_ANALYSIS.md), and [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+Explore the [architecture](docs/ARCHITECTURE.md), [configuration reference](docs/CONFIGURATION.md), and [roadmap](docs/ROADMAP.md).
 
-## Contributing and releases
+## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), the [release checklist](docs/RELEASE_CHECKLIST.md), and the [roadmap](docs/ROADMAP.md). Releases are intentionally prepared locally: run the tests and vendor verification, build the installer, then create a GitHub Release manually and upload the EXE together with its checksum.
+Issues and focused pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), then review the [changelog](CHANGELOG.md) and [release checklist](docs/RELEASE_CHECKLIST.md).
 
-## License
-
-MarkLens is free and open source under the [MIT License](LICENSE). Third-party library notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+MarkLens is free and open source under the [MIT License](LICENSE). Third-party notices are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
