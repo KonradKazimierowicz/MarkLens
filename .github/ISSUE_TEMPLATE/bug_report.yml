@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible MarkLens problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve MarkLens. Do not attach private Markdown documents.
+  - type: input
+    id: version
+    attributes:
+      label: MarkLens version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Installation method
+      options:
+        - GitHub Release installer
+        - Source checkout
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: Tell us what you opened, selected, and observed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional details
+      description: Add screenshots or sanitized sample content when useful.

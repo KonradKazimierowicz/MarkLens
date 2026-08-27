@@ -1,0 +1,49 @@
+# Install MarkLens
+
+## Recommended: Windows installer
+
+1. [Download the latest MarkLens installer](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe).
+2. Run `MarkLens-Setup-v1.0.0.exe`.
+3. Double-click any `.md` or `.markdown` file.
+
+MarkLens installs for the current Windows user. Administrator rights are not required.
+
+Windows may ask which application should open Markdown the first time. Choose **MarkLens** and enable **Always**.
+
+## Verify the download
+
+Download the accompanying [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe.sha256), then run:
+
+```powershell
+Get-FileHash .\MarkLens-Setup-v1.0.0.exe -Algorithm SHA256
+```
+
+Compare the displayed hash with the value in the `.sha256` file.
+
+## Silent installation
+
+Use this command for an unattended, per-user installation:
+
+```powershell
+.\MarkLens-Setup-v1.0.0.exe /Q:U
+```
+
+## Update
+
+Download and run the newer installer. Application files are replaced while settings and custom themes under `%LOCALAPPDATA%\MarkLens` are preserved.
+
+## Uninstall
+
+Open **Windows Settings → Apps → Installed apps**, find **MarkLens**, and select **Uninstall**.
+
+A normal uninstall preserves themes and settings for a future reinstall. See [Troubleshooting](TROUBLESHOOTING.md) when a full reset is needed.
+
+## Run from source
+
+This path is intended for developers, not regular users:
+
+```powershell
+git clone https://github.com/KonradKazimierowicz/MarkLens.git
+cd MarkLens
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MarkLens.ps1 -Path .\sample\demo.md
+```

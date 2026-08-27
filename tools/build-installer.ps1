@@ -24,7 +24,7 @@ New-Item -ItemType Directory -Path $sourceRoot -Force | Out-Null
 New-Item -ItemType Directory -Path $distRoot -Force | Out-Null
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'app\marklens.ico'))) { & (Join-Path $repoRoot 'tools\make-icon.ps1') | Out-Null }
-foreach ($item in @('app','sample','docs','install.ps1','uninstall.ps1','README.md','CHANGELOG.md','CONTRIBUTING.md','PRIVACY.md','LICENSE','THIRD_PARTY_NOTICES.md','VERSION')) {
+foreach ($item in @('app','sample','docs','install.ps1','uninstall.ps1','README.md','CHANGELOG.md','CONTRIBUTING.md','PRIVACY.md','SECURITY.md','LICENSE','THIRD_PARTY_NOTICES.md','VERSION')) {
     Copy-Item -LiteralPath (Join-Path $repoRoot $item) -Destination $payloadRoot -Recurse -Force
 }
 $payloadTools = Join-Path $payloadRoot 'tools'
