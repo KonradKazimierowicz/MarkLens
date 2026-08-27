@@ -19,7 +19,7 @@ The neutral candidates considered before the refactor were **MarkLens**, **Plain
 | `marked.js` | Vendored Marked 12.0.2, executed locally. The result is trusted as HTML. | Upgrade to 18.0.11, keep it vendored/offline, and treat its output as untrusted until DOMPurify sanitizes it. |
 | `highlight.js` | Vendored highlight.js 11.10.0 and runs after rendering. | Upgrade CDN assets to 11.12.0, keep local execution, and run only on sanitized code nodes. |
 | Edge app mode | Finds Edge from registry or standard paths and starts `--app=file:///...`. | Keep Edge discovery and app mode, serve `http://127.0.0.1:<random>/` to support safe settings persistence. |
-| installer EXE | IExpress bundles a ZIP payload and per-user installer; no admin rights or external packaging runtime. | Retain IExpress, rename the artifact to `MarkLens-Setup-vX.X.X.exe`, add hash output, update-safe data separation, validation, CI, and release automation. |
+| installer EXE | IExpress bundles a ZIP payload and per-user installer; no admin rights or external packaging runtime. | Retain IExpress, rename the artifact to `MarkLens-Setup-vX.X.X.exe`, add hash output, update-safe data separation, validation, and a documented manual release process. |
 
 ## What was reusable without product coupling
 
@@ -56,4 +56,4 @@ These are technical patterns, not copied product identity.
 - Loopback HTTP bridge: validated settings/logo writes and confined local image reads.
 - `default-settings.json` and `presets.json`: data-driven appearance defaults.
 - Security, privacy, contribution, architecture, roadmap, and release documentation.
-- Windows tests, vendor hash checks, CI build, and tag release workflow.
+- Windows tests, vendor hash checks, local installer build, and a manual release checklist.

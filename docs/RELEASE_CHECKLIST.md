@@ -28,8 +28,9 @@
 
 - [ ] Review README download/install/developer/build instructions.
 - [ ] Confirm repository description, topics, MIT license detection, Issues, Discussions (if desired), and Security Advisories.
+- [ ] Run the complete test suite, vendor verification, and installer build locally from a clean checkout.
 - [ ] Push an annotated `v1.0.0` tag.
-- [ ] Confirm GitHub Actions tests and installer build are green.
+- [ ] Create the GitHub Release manually from the annotated tag.
 - [ ] Confirm the GitHub Release contains the EXE and `.sha256` file.
 - [ ] Test the downloaded release artifact on a clean Windows user profile.
 - [ ] Document the unsigned SmartScreen expectation in release notes.

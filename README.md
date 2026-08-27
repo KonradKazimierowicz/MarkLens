@@ -123,7 +123,7 @@ The open-source core has no account, payment, sync, or marketplace dependencies.
 
 ## Contributing and releases
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), the [release checklist](docs/RELEASE_CHECKLIST.md), and the [roadmap](docs/ROADMAP.md). CI runs the Windows tests, verifies vendored hashes, builds the installer, and publishes a workflow artifact. A `v*` tag also creates a GitHub Release with the EXE and checksum.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), the [release checklist](docs/RELEASE_CHECKLIST.md), and the [roadmap](docs/ROADMAP.md). Releases are intentionally prepared locally: run the tests and vendor verification, build the installer, then create a GitHub Release manually and upload the EXE together with its checksum.
 
 ## License
 

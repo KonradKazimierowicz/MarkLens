@@ -14,4 +14,4 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 - Seven built-in presets, custom preset create/delete, and JSON import/export.
 - Separate config, themes, assets, and cache directories under `%LOCALAPPDATA%\MarkLens`.
 - DOMPurify sanitization, restrictive CSP, loopback-only settings bridge, anti-CSRF token, path confinement, input limits, and dependency hash verification.
-- Windows CI, installer artifact build, tag-driven GitHub Release support, documentation, privacy policy, roadmap, and release checklist.
+- Local Windows verification and installer build tooling, documentation, privacy policy, roadmap, and a manual GitHub Release checklist.

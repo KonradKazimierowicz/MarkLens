@@ -27,7 +27,7 @@ The application intentionally does not support SVG logos or SVG Markdown images 
 
 ## Dependency policy
 
-Browser dependencies are vendored so runtime is offline. Versions, sources, licenses, and SHA-256 hashes are committed. `tools/verify-vendor.ps1` runs in CI. Updating a dependency requires reviewing upstream release/security notes and rerunning the hostile Markdown browser check.
+Browser dependencies are vendored so runtime is offline. Versions, sources, licenses, and SHA-256 hashes are committed. Run `tools/verify-vendor.ps1` locally before every release. Updating a dependency requires reviewing upstream release/security notes and rerunning the hostile Markdown browser check.
 
 ## Reporting
 
