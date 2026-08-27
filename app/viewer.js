@@ -45,6 +45,9 @@
     ['danger', 'Warnings'], ['syntaxComment', 'Syntax: comments'], ['syntaxKeyword', 'Syntax: keywords'], ['syntaxString', 'Syntax: strings'],
     ['syntaxNumber', 'Syntax: numbers'], ['syntaxTitle', 'Syntax: titles'], ['syntaxAttribute', 'Syntax: attributes'], ['syntaxBuiltin', 'Syntax: built-ins']
   ];
+  var basicColorFields = [
+    ['background', 'Background'], ['text', 'Body text'], ['heading', 'Headings'], ['link', 'Links'], ['accent', 'Accent']
+  ];
   var fontChoices = ['Segoe UI', 'Arial', 'Calibri', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Cascadia Mono', 'Consolas'];
   var fontStacks = {
     'Segoe UI': '"Segoe UI", system-ui, sans-serif', Arial: 'Arial, sans-serif', Calibri: 'Calibri, "Segoe UI", sans-serif',
@@ -170,7 +173,20 @@
     });
   }
 
+  function makeBasicColorControls() {
+    var target = document.getElementById('basicColors');
+    basicColorFields.forEach(function (entry) {
+      var label = document.createElement('label');
+      label.className = 'color-field color-field--basic';
+      var input = document.createElement('input');
+      input.type = 'color'; input.setAttribute('data-basic-color', entry[0]);
+      var text = document.createElement('span'); text.textContent = entry[1];
+      label.appendChild(input); label.appendChild(text); target.appendChild(label);
+    });
+  }
+
   function initializeForm() {
+    makeBasicColorControls();
     makeColorControls('light', 'lightColors');
     makeColorControls('dark', 'darkColors');
     document.querySelectorAll('[data-font-select]').forEach(function (select) {
@@ -184,6 +200,13 @@
       var value = getPath(state, input.getAttribute('data-setting'));
       if (input.type === 'checkbox') { input.checked = Boolean(value); }
       else { input.value = String(value); }
+    });
+    document.querySelectorAll('[data-basic-color]').forEach(function (input) {
+      var key = input.getAttribute('data-basic-color');
+      var lightValue = state.theme.light[key]; var darkValue = state.theme.dark[key];
+      input.value = state.theme[resolveTheme()][key];
+      input.closest('.color-field').classList.toggle('is-split', lightValue !== darkValue);
+      input.setAttribute('aria-description', lightValue === darkValue ? 'Updates light and dark modes together.' : 'Light and dark differ in Advanced. Changing this value will synchronize them.');
     });
     document.querySelectorAll('[data-output]').forEach(function (output) {
       var path = output.getAttribute('data-output');
@@ -338,12 +361,22 @@
     elements.settingsButton.addEventListener('click', openSettings); elements.floatingSettingsButton.addEventListener('click', openSettings); elements.settingsClose.addEventListener('click', closeSettings); elements.settingsOverlay.addEventListener('click', closeSettings);
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && document.body.classList.contains('settings-open')) { closeSettings(); } });
     elements.settingsBody.addEventListener('input', function (event) {
-      var input = event.target; var path = input.getAttribute('data-setting'); if (!path) { return; }
+      var input = event.target; var basicColor = input.getAttribute('data-basic-color');
+      if (basicColor) {
+        state.theme.light[basicColor] = input.value; state.theme.dark[basicColor] = input.value;
+        currentPresetId = 'customized'; applySettings(); queueSave(false); return;
+      }
+      var path = input.getAttribute('data-setting'); if (!path) { return; }
       var value = input.type === 'checkbox' ? input.checked : (input.hasAttribute('data-number') ? Number(input.value) : input.value);
       setPath(state, path, value); currentPresetId = 'customized'; applySettings(); queueSave(false);
     });
     elements.settingsBody.addEventListener('change', function (event) {
-      var input = event.target; var path = input.getAttribute('data-setting'); if (!path) { return; }
+      var input = event.target; var basicColor = input.getAttribute('data-basic-color');
+      if (basicColor) {
+        state.theme.light[basicColor] = input.value; state.theme.dark[basicColor] = input.value;
+        currentPresetId = 'customized'; applySettings(); queueSave(true); return;
+      }
+      var path = input.getAttribute('data-setting'); if (!path) { return; }
       var value = input.type === 'checkbox' ? input.checked : (input.hasAttribute('data-number') ? Number(input.value) : input.value);
       setPath(state, path, value); currentPresetId = 'customized'; applySettings(); queueSave(true);
     });

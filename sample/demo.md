@@ -30,6 +30,35 @@ Write-Host $message
 
 ---
 
+## Markdown in, beautiful reading out
+
+This is the Markdown source:
+
+````markdown
+### Ship a tiny Windows tool
+
+- [x] Render Markdown locally
+- [x] Highlight code
+- [ ] Make the coffee
+
+```powershell
+$document = 'notes.md'
+Write-Host "Opening $document with MarkLens"
+```
+````
+
+And this is how its code looks after MarkLens renders it:
+
+```powershell
+$document = 'notes.md'
+$reader = Join-Path $env:LOCALAPPDATA 'Programs\MarkLens'
+Write-Host "Opening $document from $reader"
+```
+
+Use fenced blocks such as ` ```powershell `, ` ```javascript `, or ` ```json ` to get automatic syntax highlighting.
+
+---
+
 ### A smaller heading
 
 External links, such as the [MarkLens repository](https://github.com/KonradKazimierowicz/MarkLens), open only when selected. Remote images are blocked by default for privacy.

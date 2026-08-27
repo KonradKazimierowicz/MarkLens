@@ -84,36 +84,53 @@
       </section>
 
       <section class="settings-section">
-        <h3>Colors</h3>
-        <details open><summary>Light palette</summary><div class="color-grid" id="lightColors"></div></details>
-        <details><summary>Dark palette</summary><div class="color-grid" id="darkColors"></div></details>
+        <div class="section-heading"><h3>Colors</h3><span>5 essentials</span></div>
+        <p class="settings-note">Change a color once to update both light and dark modes. Open Advanced for separate, complete palettes.</p>
+        <div class="color-grid color-grid--basic" id="basicColors"></div>
+        <details class="advanced-settings">
+          <summary><span>Advanced colors</span><small>Separate light and dark palettes</small></summary>
+          <div class="advanced-settings__body">
+            <details open><summary>Light palette</summary><div class="color-grid" id="lightColors"></div></details>
+            <details><summary>Dark palette</summary><div class="color-grid" id="darkColors"></div></details>
+          </div>
+        </details>
       </section>
 
       <section class="settings-section">
         <h3>Typography</h3>
-        <div class="two-columns">
-          <label class="field"><span>Body font</span><select data-setting="typography.fontBody" data-font-select></select></label>
-          <label class="field"><span>Heading font</span><select data-setting="typography.fontHeading" data-font-select></select></label>
-        </div>
-        <label class="field"><span>Code font</span><select data-setting="typography.fontCode" data-font-select></select></label>
+        <label class="field"><span>Body font</span><select data-setting="typography.fontBody" data-font-select></select></label>
         <label class="range-field"><span>Text size <output data-output="typography.fontSize"></output></span><input type="range" min="12" max="24" step="1" data-setting="typography.fontSize" data-number></label>
         <label class="range-field"><span>Line height <output data-output="typography.lineHeight"></output></span><input type="range" min="1.2" max="2.2" step="0.05" data-setting="typography.lineHeight" data-number></label>
-        <label class="range-field"><span>Heading scale <output data-output="typography.headingScale"></output></span><input type="range" min="0.85" max="1.35" step="0.05" data-setting="typography.headingScale" data-number></label>
+        <details class="advanced-settings">
+          <summary><span>Advanced typography</span><small>Headings and code</small></summary>
+          <div class="advanced-settings__body">
+            <div class="two-columns">
+              <label class="field"><span>Heading font</span><select data-setting="typography.fontHeading" data-font-select></select></label>
+              <label class="field"><span>Code font</span><select data-setting="typography.fontCode" data-font-select></select></label>
+            </div>
+            <label class="range-field"><span>Heading scale <output data-output="typography.headingScale"></output></span><input type="range" min="0.85" max="1.35" step="0.05" data-setting="typography.headingScale" data-number></label>
+          </div>
+        </details>
       </section>
 
       <section class="settings-section">
         <h3>Layout</h3>
         <label class="range-field"><span>Document width <output data-output="layout.maxWidth"></output></span><input type="range" min="560" max="1600" step="20" data-setting="layout.maxWidth" data-number></label>
         <label class="range-field"><span>Inner padding <output data-output="layout.contentPadding"></output></span><input type="range" min="12" max="72" step="2" data-setting="layout.contentPadding" data-number></label>
-        <label class="range-field"><span>Vertical spacing <output data-output="layout.blockSpacing"></output></span><input type="range" min="0.6" max="2.5" step="0.05" data-setting="layout.blockSpacing" data-number></label>
-        <label class="range-field"><span>Corner radius <output data-output="components.radius"></output></span><input type="range" min="0" max="28" step="1" data-setting="components.radius" data-number></label>
-        <div class="two-columns">
-          <label class="field"><span>Shadow</span><select data-setting="components.shadow"><option value="none">None</option><option value="soft">Soft</option><option value="medium">Medium</option></select></label>
-          <label class="field"><span>Scrollbar</span><select data-setting="components.scrollbarWidth"><option value="thin">Thin</option><option value="regular">Regular</option><option value="wide">Wide</option></select></label>
-          <label class="field"><span>Quotes</span><select data-setting="components.quoteStyle"><option value="line">Line</option><option value="card">Card</option><option value="italic">Italic</option></select></label>
-          <label class="field"><span>Tables</span><select data-setting="components.tableStyle"><option value="lines">Lines</option><option value="striped">Striped</option><option value="minimal">Minimal</option></select></label>
-          <label class="field"><span>Separators</span><select data-setting="components.separatorStyle"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="fade">Fade</option></select></label>
-        </div>
+        <details class="advanced-settings">
+          <summary><span>Advanced layout</span><small>Spacing and components</small></summary>
+          <div class="advanced-settings__body">
+            <label class="range-field"><span>Vertical spacing <output data-output="layout.blockSpacing"></output></span><input type="range" min="0.6" max="2.5" step="0.05" data-setting="layout.blockSpacing" data-number></label>
+            <label class="range-field"><span>Corner radius <output data-output="components.radius"></output></span><input type="range" min="0" max="28" step="1" data-setting="components.radius" data-number></label>
+            <div class="two-columns">
+              <label class="field"><span>Shadow</span><select data-setting="components.shadow"><option value="none">None</option><option value="soft">Soft</option><option value="medium">Medium</option></select></label>
+              <label class="field"><span>Scrollbar</span><select data-setting="components.scrollbarWidth"><option value="thin">Thin</option><option value="regular">Regular</option><option value="wide">Wide</option></select></label>
+              <label class="field"><span>Quotes</span><select data-setting="components.quoteStyle"><option value="line">Line</option><option value="card">Card</option><option value="italic">Italic</option></select></label>
+              <label class="field"><span>Tables</span><select data-setting="components.tableStyle"><option value="lines">Lines</option><option value="striped">Striped</option><option value="minimal">Minimal</option></select></label>
+              <label class="field"><span>Separators</span><select data-setting="components.separatorStyle"><option value="solid">Solid</option><option value="dashed">Dashed</option><option value="fade">Fade</option></select></label>
+            </div>
+          </div>
+        </details>
       </section>
 
       <section class="settings-section">
