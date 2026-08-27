@@ -11,6 +11,12 @@ MarkLens turns a local `.md` file into a calm, polished reading view. Install it
 
 ![MarkLens rendering an English Markdown document with its Appearance panel open](docs/images/marklens-reader.png)
 
+### Dark mode, with the document still in view
+
+The optional table of contents keeps longer notes easy to scan while the reading surface stays focused on the current section.
+
+![MarkLens dark theme rendering a longer Markdown document with a compact table of contents](docs/images/marklens-dark-reader.png)
+
 ## A reader that gets out of the way
 
 - **Open naturally.** Register `.md` and `.markdown` for the current Windows user.
