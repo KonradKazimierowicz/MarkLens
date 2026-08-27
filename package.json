@@ -1,6 +1,6 @@
 {
   "name": "marklens",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Development-only browser test tooling for MarkLens.",
   "scripts": {

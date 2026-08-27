@@ -4,7 +4,7 @@
 
 - [ ] `VERSION`, tag, installer name, and changelog version match.
 - [ ] No organization-specific source branding remains.
-- [ ] Default install → double-click `.md` → read flow works on Windows 10 and Windows 11.
+- [ ] Interactive install opens the MarkLens Default Apps page; after one-time user confirmation, double-click `.md` → read works on Windows 10 and Windows 11.
 - [ ] `.markdown` behaves the same as `.md`.
 - [ ] Edge app mode and default-browser fallback both work.
 - [ ] Appearance changes are live and persist after closing/reopening.
@@ -30,7 +30,7 @@
 - [ ] Review README download/install/developer/build instructions.
 - [ ] Confirm repository description, topics, MIT license detection, Issues, Discussions (if desired), and Security Advisories.
 - [ ] Run the complete test suite, vendor verification, and installer build locally from a clean checkout.
-- [ ] Push an annotated `v1.0.0` tag.
+- [ ] Push an annotated tag matching `VERSION`.
 - [ ] Create the GitHub Release manually from the annotated tag.
 - [ ] Confirm the GitHub Release contains the EXE and `.sha256` file.
 - [ ] Test the downloaded release artifact on a clean Windows user profile.

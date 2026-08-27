@@ -12,6 +12,8 @@ Until a signed build is available, use the [source launch instructions](INSTALLA
 
 ## Markdown still opens in another application
 
+Open any document in MarkLens, select the gear icon, then choose **Reader behavior → Set MarkLens as default**. Windows opens the MarkLens-specific Default Apps page; assign both `.md` and `.markdown` there.
+
 Right-click a `.md` file and choose **Open with → Choose another app → MarkLens → Always**.
 
 You can also open **Windows Settings → Apps → Default apps**, search for `.md` and `.markdown`, and select MarkLens for both extensions.

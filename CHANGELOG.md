@@ -2,6 +2,26 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [1.0.1] - 2026-08-27
+
+### Added
+
+- MarkLens-specific Windows Default Apps flow after interactive installation and from Reader behavior settings.
+- Friendly MarkLens name and icon registration for the Windows file-handler chooser.
+- Real-browser responsive coverage at 320, 390, 768, 1024, and 1440 pixel widths.
+
+### Changed
+
+- The reader toolbar now auto-hides by default while retaining the reading-progress strip and revealing itself at the top edge, on upward scrolling, or keyboard focus.
+- The table of contents has a clearer active state, section count, mobile close control, and a dedicated touch-friendly scroll surface.
+- The browser favicon now uses the same packaged, multi-size blue-to-teal icon as the Windows application.
+
+### Fixed
+
+- Mobile table of contents could remain `display: none` when the desktop preference was disabled.
+- Long tables of contents could not scroll reliably on small screens.
+- `.md` files could continue opening the Windows app chooser because registration alone cannot confirm a user default.
+
 ## [1.0.0] - 2026-08-27
 
 ### Added

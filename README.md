@@ -2,7 +2,7 @@
 
 > **A free, open-source Markdown reader and Markdown viewer for Windows 10 and 11.**
 
-[![Download MarkLens for Windows](https://img.shields.io/badge/Download_for_Windows-MarkLens_1.0.0-2563eb?style=for-the-badge&logo=windows11)](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe)
+[![Download MarkLens for Windows](https://img.shields.io/badge/Download_for_Windows-MarkLens_1.0.1-2563eb?style=for-the-badge&logo=windows11)](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.1.exe)
 
 ![Windows 10 and 11](https://img.shields.io/badge/Windows-10%20%7C%2011-2563eb?style=flat-square)
 ![PowerShell 5.1+](https://img.shields.io/badge/PowerShell-5.1%2B-334155?style=flat-square)
@@ -15,13 +15,13 @@ No account, advertisements, telemetry, cloud storage, administrator rights, or i
 
 ## Start in three steps
 
-1. [Download `MarkLens-Setup-v1.0.0.exe`](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe).
-2. Run the installer.
-3. Double-click any `.md` or `.markdown` file.
+1. [Download `MarkLens-Setup-v1.0.1.exe`](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.1.exe).
+2. Run the installer, then choose MarkLens for `.md` and `.markdown` on the Windows Default Apps page that opens.
+3. Double-click any Markdown file.
 
 Windows may ask which application should open Markdown the first time. Choose **MarkLens** and enable **Always**.
 
-> The version 1.0 installer is unsigned. SmartScreen may show a warning, while Smart App Control can block unsigned apps entirely. Verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.0.exe.sha256) and read [Troubleshooting](docs/TROUBLESHOOTING.md).
+> The version 1.0 installer is unsigned. SmartScreen may show a warning, while Smart App Control can block unsigned apps entirely. Verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.0.1.exe.sha256) and read [Troubleshooting](docs/TROUBLESHOOTING.md).
 
 Need more detail? Read the [installation guide](docs/INSTALLATION.md) or [troubleshooting guide](docs/TROUBLESHOOTING.md).
 
@@ -63,7 +63,7 @@ The included [demo document](sample/demo.md) shows raw Markdown beside its rende
 - [x] Highlight fenced code
 
 ```powershell
-Get-FileHash .\MarkLens-Setup-v1.0.0.exe -Algorithm SHA256
+Get-FileHash .\MarkLens-Setup-v1.0.1.exe -Algorithm SHA256
 ```
 ````
 
