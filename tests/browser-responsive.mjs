@@ -19,6 +19,9 @@ try {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await page.locator('#content h1').waitFor();
 
+  assert(await page.locator('#reloadButton').count() === 0, 'The removed reload action should not remain in the toolbar.');
+  assert(await page.locator('#printButton').isVisible(), 'Print / preview should be visible in the toolbar.');
+
   const favicon = await page.locator('#favicon').getAttribute('href');
   assert(favicon === '/favicon.ico', 'Default favicon should use the packaged MarkLens icon.');
   const faviconResponse = await page.request.get(new URL('/favicon.ico', url).toString());
@@ -69,6 +72,7 @@ try {
 
   for (const width of [320, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 700 });
+    assert(await page.locator('#printButton').isVisible(), `Print / preview should remain visible at ${width}px.`);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `Layout should not overflow at ${width}px.`);
   }
 } finally {

@@ -25,3 +25,9 @@ Invalid properties fall back to defaults, excessive numbers are clamped, and unk
 6. Add a normalization, persistence, and live-preview test.
 
 This is the only supported settings flow; viewer components should not read unvalidated JSON directly.
+
+## Printing
+
+Use the printer icon in the reader toolbar to open the native Edge print preview. The same action remains visible beside Settings when the header is disabled. `Ctrl+P` also uses the print layout.
+
+The printed document uses the browser's selected paper size and printer while MarkLens supplies safe printable margins, a white page, black text, the source file name, expanded disclosure sections, wrapped code, repeated table headings, and page-break protection for important blocks. Reader controls and the local source path are excluded from paper and PDF output.

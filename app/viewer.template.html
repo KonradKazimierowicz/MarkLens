@@ -30,14 +30,14 @@
         <button class="icon-button" id="tocToggle" type="button" title="Toggle table of contents" aria-label="Toggle table of contents" aria-expanded="true">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h2v2H4zm4 0h12v2H8zM4 11h2v2H4zm4 0h12v2H8zM4 16h2v2H4zm4 0h12v2H8z"/></svg>
         </button>
-        <button class="icon-button" id="reloadButton" type="button" title="Reload source" aria-label="Reload source">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg>
-        </button>
         <button class="icon-button" id="themeToggle" type="button" title="Toggle light/dark" aria-label="Toggle light/dark">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.91-.1-1.35A7 7 0 0 1 13.35 3.1C12.91 3.04 12.46 3 12 3z"/></svg>
         </button>
         <button class="icon-button" id="copyPathButton" type="button" title="Copy source path" aria-label="Copy source path">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11z"/></svg>
+        </button>
+        <button class="icon-button" id="printButton" data-print type="button" title="Print / preview" aria-label="Print or preview document">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8H6V3h12v5zm0 9v4H6v-4h12zm1-7H5a3 3 0 0 0-3 3v5h3v-3h14v3h3v-5a3 3 0 0 0-3-3zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
         </button>
         <button class="icon-button" id="settingsButton" type="button" title="Appearance settings" aria-label="Open appearance settings" aria-haspopup="dialog">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.1 7.1 0 0 0-1.62-.94L14.4 2.8a.48.48 0 0 0-.48-.4h-3.84a.48.48 0 0 0-.48.4l-.36 2.54c-.58.24-1.12.56-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.72 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.31.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.04.23.24.4.48.4h3.84c.24 0 .44-.17.48-.4l.36-2.54c.58-.24 1.12-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"/></svg>
@@ -47,6 +47,9 @@
   </header>
   <button class="icon-button floating-settings" id="floatingSettingsButton" type="button" title="Appearance settings" aria-label="Open appearance settings" aria-haspopup="dialog">
     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.1 7.1 0 0 0-1.62-.94L14.4 2.8a.48.48 0 0 0-.48-.4h-3.84a.48.48 0 0 0-.48.4l-.36 2.54c-.58.24-1.12.56-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.72 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.31.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.04.23.24.4.48.4h3.84c.24 0 .44-.17.48-.4l.36-2.54c.58-.24 1.12-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"/></svg>
+  </button>
+  <button class="icon-button floating-print" id="floatingPrintButton" data-print type="button" title="Print / preview" aria-label="Print or preview document">
+    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8H6V3h12v5zm0 9v4H6v-4h12zm1-7H5a3 3 0 0 0-3 3v5h3v-3h14v3h3v-5a3 3 0 0 0-3-3zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
   </button>
 
   <div class="reader-layout" id="readerLayout">
@@ -60,6 +63,11 @@
       <nav id="tocList"></nav>
     </aside>
     <main class="content-shell">
+      <header class="print-header" aria-hidden="true">
+        <div class="print-header__mark">MARKLENS DOCUMENT</div>
+        <strong id="printDocumentName"></strong>
+        <span>Rendered locally for printing</span>
+      </header>
       <article class="markdown-body" id="content" aria-live="polite"></article>
       <footer class="reader-footer">Rendered locally by <span id="footerName">MarkLens</span>. Your document never leaves this computer.</footer>
     </main>

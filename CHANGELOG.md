@@ -2,6 +2,19 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [1.1.0] - 2026-08-27
+
+### Added
+
+- A persistent **Print / preview** action backed by the native Edge print dialog.
+- An ink-friendly print layout with document identification, printable margins, expanded details, wrapped code, repeated table headers, and sensible page-break rules.
+- Real-browser coverage that verifies the print action, print-only visibility, computed print styles, and PDF generation.
+
+### Changed
+
+- Removed the manual reload action from the reader toolbar.
+- Print remains available as a floating action when the reader header is disabled.
+
 ## [1.0.1] - 2026-08-27
 
 ### Added

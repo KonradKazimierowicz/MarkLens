@@ -9,13 +9,14 @@ The roadmap keeps the local open-source reader useful on its own. Items are prop
 - live source-file watching and a manual cache management screen;
 - additional safe raster image formats where Windows support is reliable;
 - localized UI strings, starting with Polish;
-- signed release feasibility and improved default-app onboarding.
+- signed release feasibility and improved default-app onboarding;
+- configurable print presets building on the native print-preview layout.
 
 ## v1.2 — portable themes and output
 
 - standalone versioned theme-pack files in the `themes` directory;
 - theme thumbnails and conflict-safe import;
-- print presets and local PDF export;
+- one-click local PDF export;
 - optional sanitized SVG rasterization in an isolated helper;
 - portable mode for USB/folder-based installations;
 - richer code-highlight palettes exposed through the same validator/CSS-variable pipeline.

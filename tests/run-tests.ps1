@@ -6,6 +6,7 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 & (Join-Path $PSScriptRoot 'Test-BrowserSecurity.ps1')
 & (Join-Path $PSScriptRoot 'Test-Appearance.ps1')
 & (Join-Path $PSScriptRoot 'Test-Responsive.ps1')
+& (Join-Path $PSScriptRoot 'Test-Print.ps1')
 & (Join-Path $PSScriptRoot 'Test-Installer.ps1')
 
 $node = Get-Command node -ErrorAction SilentlyContinue

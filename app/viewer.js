@@ -142,6 +142,7 @@
     document.getElementById('footerName').textContent = state.branding.title;
     document.getElementById('documentName').textContent = bootstrap.document.fileName;
     document.getElementById('documentPath').textContent = bootstrap.document.fullPath;
+    document.getElementById('printDocumentName').textContent = bootstrap.document.fileName;
     document.getElementById('documentBlock').hidden = !state.branding.showFileName && !state.branding.showFilePath;
     document.getElementById('documentName').hidden = !state.branding.showFileName;
     document.getElementById('documentPath').hidden = !state.branding.showFilePath;
@@ -443,7 +444,13 @@
       state.customPresets = state.customPresets.filter(function (preset) { return preset.id !== id; }); currentPresetId = 'default'; populatePresets('default'); queueSave(true); showToast('Custom preset deleted.');
     });
     document.getElementById('themeToggle').addEventListener('click', function () { state.theme.mode = resolveTheme() === 'dark' ? 'light' : 'dark'; applySettings(); queueSave(true); });
-    document.getElementById('reloadButton').addEventListener('click', function () { window.location.reload(); });
+    document.querySelectorAll('[data-print]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        closeMobileToc(false);
+        showTopbar();
+        window.print();
+      });
+    });
     document.getElementById('copyPathButton').addEventListener('click', function () {
       navigator.clipboard.writeText(bootstrap.document.fullPath).then(function () { showToast('Source path copied.'); }).catch(function () { showToast('Could not copy the source path.'); });
     });
