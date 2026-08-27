@@ -2,8 +2,8 @@
 
 ## Recommended: Windows installer
 
-1. [Download the latest MarkLens installer](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.1.1.exe).
-2. Run `MarkLens-Setup-v1.1.1.exe`.
+1. [Download the latest MarkLens installer](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.2.0.exe).
+2. Run `MarkLens-Setup-v1.2.0.exe`.
 3. Windows opens the MarkLens file-default page. Choose MarkLens for both `.md` and `.markdown`.
 4. Double-click any Markdown file.
 
@@ -13,10 +13,10 @@ Windows deliberately requires this one-time confirmation; applications cannot si
 
 ## Verify the download
 
-Download the accompanying [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.1.1.exe.sha256), then run:
+Download the accompanying [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.2.0.exe.sha256), then run:
 
 ```powershell
-Get-FileHash .\MarkLens-Setup-v1.1.1.exe -Algorithm SHA256
+Get-FileHash .\MarkLens-Setup-v1.2.0.exe -Algorithm SHA256
 ```
 
 Compare the displayed hash with the value in the `.sha256` file.
@@ -26,7 +26,7 @@ Compare the displayed hash with the value in the `.sha256` file.
 Use this command for an unattended, per-user installation:
 
 ```powershell
-.\MarkLens-Setup-v1.1.1.exe /Q:U
+.\MarkLens-Setup-v1.2.0.exe /Q:U
 ```
 
 Silent installation registers MarkLens as an available handler but does not open Windows Settings. File defaults must still be confirmed by the signed-in user.

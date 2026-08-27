@@ -35,8 +35,9 @@ try {
     Assert-True (Test-Path -LiteralPath $generated.CachePath -PathType Leaf) 'Viewer cache should be generated.'
     Assert-True ($generated.Html.Contains('DOMPurify.sanitize')) 'Viewer must sanitize rendered Markdown.'
     Assert-True ($generated.Html.Contains('floatingSettingsButton')) 'Settings must remain reachable when the header is hidden.'
+    Assert-True ($generated.Html.Contains('MarkLensOnboarding')) 'Viewer must include the first-run onboarding component.'
     Assert-True ($generated.Html.Contains("FORBID_TAGS: ['script'")) 'Viewer must explicitly forbid active tags.'
-    Assert-True (-not ($generated.Html.Contains('/*__MARKLENS_CSS__*/') -or $generated.Html.Contains('/*__MARKLENS_APP_JS__*/') -or $generated.Html.Contains('/*__MARKLENS_BOOTSTRAP_JSON__*/'))) 'Generated HTML must not contain unresolved placeholders.'
+    Assert-True (-not ($generated.Html.Contains('/*__MARKLENS_CSS__*/') -or $generated.Html.Contains('/*__MARKLENS_APP_JS__*/') -or $generated.Html.Contains('/*__MARKLENS_ONBOARDING_JS__*/') -or $generated.Html.Contains('/*__MARKLENS_BOOTSTRAP_JSON__*/'))) 'Generated HTML must not contain unresolved placeholders.'
     Assert-True ($generated.Html.Contains('\u003cscript\u003ealert(1)\u003c/script\u003e')) 'Settings embedded in scripts must escape angle brackets.'
     Assert-True ($generated.CachePath -match 'view-[0-9a-f]{16}\.html$') 'Cache keys should use a SHA-256 prefix.'
 

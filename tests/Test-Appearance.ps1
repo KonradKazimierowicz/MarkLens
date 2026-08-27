@@ -17,9 +17,14 @@ if (-not (Test-Path -LiteralPath (Join-Path $repoRoot 'node_modules\playwright-c
 $testRoot = Join-Path $repoRoot ('work\test-appearance-' + [guid]::NewGuid().ToString('N'))
 $readyFile = Join-Path $testRoot 'ready.txt'
 New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
+$dataRoot = Join-Path $testRoot 'data'
+Import-Module (Join-Path $repoRoot 'app\MarkLens.Core.psm1') -Force
+$testSettings = ConvertTo-MarkLensHashtable (Get-MarkLensDefaultSettings)
+$testSettings.behavior.onboardingComplete = $true
+Save-MarkLensSettings -Settings $testSettings -DataRoot $dataRoot | Out-Null
 $server = $null
 try {
-    $serverArguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',(Join-Path $repoRoot 'sample\demo.md'),'-DataRoot',(Join-Path $testRoot 'data'),'-NoBrowser','-ReadyFile',$readyFile)
+    $serverArguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',(Join-Path $repoRoot 'sample\demo.md'),'-DataRoot',$dataRoot,'-NoBrowser','-ReadyFile',$readyFile)
     $server = Start-Process -FilePath 'powershell.exe' -ArgumentList $serverArguments -WindowStyle Hidden -PassThru
     $deadline = (Get-Date).AddSeconds(12)
     while (-not (Test-Path -LiteralPath $readyFile -PathType Leaf) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 100 }

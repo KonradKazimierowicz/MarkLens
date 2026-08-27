@@ -463,7 +463,7 @@
     elements.tocList.addEventListener('click', function (event) { if (event.target.closest('a')) { closeMobileToc(false); } });
     document.getElementById('resetButton').addEventListener('click', function () {
       if (!window.confirm('Reset all appearance, branding, and custom presets to MarkLens defaults?')) { return; }
-      state = deepClone(defaults); currentPresetId = 'default'; applySettings(); populatePresets('default'); queueSave(true); showToast('Default settings restored.');
+      state = deepClone(defaults); state.behavior.onboardingComplete = true; currentPresetId = 'default'; applySettings(); populatePresets('default'); queueSave(true); showToast('Default settings restored.');
     });
     document.getElementById('exportButton').addEventListener('click', function () {
       var exported = deepClone(state); exported.exportedBy = 'MarkLens'; exported.exportedAt = new Date().toISOString();
@@ -510,4 +510,18 @@
   }
 
   initializeForm(); applySettings(); renderMarkdown(); bindEvents();
+  if (window.MarkLensOnboarding) {
+    window.MarkLensOnboarding.create({
+      presets: bootstrap.builtInPresets,
+      defaults: defaults,
+      completeInitially: Boolean(state.behavior.onboardingComplete),
+      applyPreset: applyPreset,
+      complete: function () { state.behavior.onboardingComplete = true; queueSave(true); },
+      beforeTour: function () {
+        if (document.body.classList.contains('settings-open')) { document.body.classList.remove('settings-open'); elements.settings.setAttribute('aria-hidden', 'true'); }
+        closeMobileToc(false); showTopbar();
+      },
+      returnFocus: function () { (state.branding.showHeader ? elements.settingsButton : elements.floatingSettingsButton).focus(); }
+    });
+  }
 }());

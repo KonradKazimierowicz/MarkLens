@@ -1,70 +1,59 @@
 [
   {
     "id": "default",
-    "name": "Default",
-    "description": "Balanced, calm, and familiar.",
+    "name": "Ocean Blue",
+    "description": "Calm blue accents and balanced spacing for everyday reading.",
     "settings": {}
   },
   {
-    "id": "minimal-light",
-    "name": "Minimal Light",
-    "description": "A quiet white canvas with almost no decoration.",
+    "id": "forest-green",
+    "name": "Forest Green",
+    "description": "Natural greens with soft surfaces for long reading sessions.",
     "settings": {
-      "theme": { "mode": "light" },
-      "layout": { "maxWidth": 820, "contentPadding": 28 },
-      "components": { "radius": 4, "shadow": "none", "tableStyle": "minimal", "separatorStyle": "solid" }
+      "theme": {
+        "light": { "background": "#f2f7f4", "surface": "#ffffff", "surfaceAlt": "#eaf4ee", "heading": "#12372a", "link": "#147a55", "accent": "#16805a", "border": "#bdd8c9", "quoteBackground": "#edf7f1", "tableStripe": "#f0f8f3" },
+        "dark": { "background": "#0c1612", "surface": "#12201a", "surfaceAlt": "#182a22", "heading": "#edfff5", "link": "#65d6a3", "accent": "#3ecf8e", "border": "#2b4a3b", "codeBackground": "#0d1914", "quoteBackground": "#17271f", "tableStripe": "#16251e" }
+      },
+      "components": { "radius": 10, "shadow": "soft", "quoteStyle": "card", "tableStyle": "striped" }
     }
   },
   {
-    "id": "minimal-dark",
-    "name": "Minimal Dark",
-    "description": "Low-contrast dark reading for focused sessions.",
+    "id": "amber-paper",
+    "name": "Amber Paper",
+    "description": "Warm paper tones and a serif rhythm for essays and notes.",
     "settings": {
-      "theme": { "mode": "dark", "dark": { "background": "#0b0c0f", "surface": "#0b0c0f", "surfaceAlt": "#15171c", "border": "#272a31", "accent": "#a78bfa", "link": "#c4b5fd" } },
-      "layout": { "maxWidth": 800, "contentPadding": 24 },
-      "components": { "radius": 0, "shadow": "none", "tableStyle": "minimal" }
+      "theme": {
+        "light": { "background": "#f5efe5", "surface": "#fffdf8", "surfaceAlt": "#f8f0e2", "text": "#3d342a", "heading": "#241b13", "link": "#96520d", "accent": "#b45f06", "border": "#dfcfb9", "codeBackground": "#f6eee2", "quoteBackground": "#faf1e3" },
+        "dark": { "background": "#17130f", "surface": "#211b15", "surfaceAlt": "#2a2118", "text": "#eadfce", "heading": "#fff7e8", "link": "#f2b76b", "accent": "#e99a3e", "border": "#4c3d2d", "codeBackground": "#18130f", "quoteBackground": "#292016" }
+      },
+      "typography": { "fontBody": "Georgia", "fontHeading": "Georgia", "fontSize": 17, "lineHeight": 1.8, "headingScale": 1.05 },
+      "layout": { "maxWidth": 800, "contentPadding": 44, "blockSpacing": 1.15 },
+      "components": { "radius": 4, "shadow": "soft", "quoteStyle": "italic", "tableStyle": "minimal" }
     }
   },
   {
-    "id": "github-like",
-    "name": "GitHub-like",
-    "description": "A familiar code-hosting-inspired document rhythm.",
+    "id": "plum-focus",
+    "name": "Plum Focus",
+    "description": "A restrained violet accent with crisp headings and compact structure.",
     "settings": {
-      "theme": { "light": { "background": "#ffffff", "surface": "#ffffff", "border": "#d0d7de", "link": "#0969da", "accent": "#0969da", "codeBackground": "#f6f8fa" }, "dark": { "background": "#0d1117", "surface": "#0d1117", "border": "#30363d", "link": "#58a6ff", "accent": "#58a6ff", "codeBackground": "#161b22" } },
-      "typography": { "fontBody": "Segoe UI", "fontHeading": "Segoe UI", "fontCode": "Consolas", "fontSize": 16, "lineHeight": 1.6 },
-      "layout": { "maxWidth": 980 },
-      "components": { "radius": 6, "shadow": "none", "quoteStyle": "line", "tableStyle": "lines" }
+      "theme": {
+        "light": { "background": "#f7f5fa", "surface": "#ffffff", "surfaceAlt": "#f1edf7", "heading": "#2e1f3d", "link": "#6d3bb5", "accent": "#7545bd", "border": "#d7cce5", "quoteBackground": "#f5f1fa" },
+        "dark": { "background": "#121016", "surface": "#1b1721", "surfaceAlt": "#241e2c", "heading": "#faf5ff", "link": "#c7a6ff", "accent": "#a77aeb", "border": "#443753", "codeBackground": "#141119", "quoteBackground": "#211a29" }
+      },
+      "layout": { "maxWidth": 880, "contentPadding": 34 },
+      "components": { "radius": 14, "shadow": "soft", "quoteStyle": "line", "separatorStyle": "fade" }
     }
   },
   {
-    "id": "documentation",
-    "name": "Documentation",
-    "description": "Dense, structured, and optimized for reference material.",
+    "id": "midnight-cyan",
+    "name": "Midnight Cyan",
+    "description": "Dark technical contrast with cyan details for code-heavy documents.",
     "settings": {
-      "theme": { "light": { "accent": "#0e7490", "link": "#0e7490" }, "dark": { "accent": "#22d3ee", "link": "#67e8f9" } },
-      "typography": { "fontSize": 15, "lineHeight": 1.6 },
-      "layout": { "maxWidth": 1120, "contentPadding": 40, "blockSpacing": 0.85 },
-      "components": { "radius": 8, "shadow": "soft", "tableStyle": "lines" }
-    }
-  },
-  {
-    "id": "writer",
-    "name": "Writer",
-    "description": "Warm paper tones and generous long-form spacing.",
-    "settings": {
-      "theme": { "light": { "background": "#f4efe6", "surface": "#fffdf8", "surfaceAlt": "#f8f1e6", "text": "#342f2a", "heading": "#201c18", "accent": "#9a5b26", "link": "#8a4b1c", "border": "#dfd4c5", "quoteBackground": "#f8f1e6" }, "dark": { "background": "#171411", "surface": "#211d19", "surfaceAlt": "#29231e", "text": "#e8dfd3", "heading": "#fff7ed", "accent": "#e6a15c", "link": "#f0b777", "border": "#4a4036" } },
-      "typography": { "fontBody": "Georgia", "fontHeading": "Georgia", "fontSize": 18, "lineHeight": 1.85, "headingScale": 1.05 },
-      "layout": { "maxWidth": 760, "contentPadding": 48, "blockSpacing": 1.25 },
-      "components": { "radius": 2, "shadow": "soft", "quoteStyle": "italic", "tableStyle": "minimal" }
-    }
-  },
-  {
-    "id": "developer",
-    "name": "Developer",
-    "description": "Crisp contrast and compact spacing for technical notes.",
-    "settings": {
-      "theme": { "dark": { "background": "#0b1020", "surface": "#111827", "surfaceAlt": "#172033", "text": "#dbeafe", "heading": "#eff6ff", "accent": "#22d3ee", "link": "#67e8f9", "border": "#26344d", "codeBackground": "#070b14", "inlineCodeBackground": "#1e293b" } },
-      "typography": { "fontBody": "Segoe UI", "fontHeading": "Segoe UI", "fontCode": "Cascadia Mono", "fontSize": 15, "lineHeight": 1.65 },
+      "theme": {
+        "mode": "dark",
+        "dark": { "background": "#071116", "surface": "#0d1b22", "surfaceAlt": "#122630", "text": "#d7edf4", "muted": "#8fb2bf", "heading": "#effcff", "link": "#62d8f5", "accent": "#22b8d6", "border": "#24404b", "codeBackground": "#07141a", "inlineCodeBackground": "#17303a", "quoteBackground": "#10242c", "tableStripe": "#10232b" }
+      },
+      "typography": { "fontCode": "Cascadia Mono", "fontSize": 15, "lineHeight": 1.65 },
       "layout": { "maxWidth": 1080, "contentPadding": 32, "blockSpacing": 0.9 },
       "components": { "radius": 8, "shadow": "medium", "quoteStyle": "card", "tableStyle": "striped", "scrollbarWidth": "thin" }
     }

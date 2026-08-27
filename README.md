@@ -2,7 +2,7 @@
 
 > **A free, open-source Markdown reader and Markdown viewer for Windows 10 and 11.**
 
-[![Download MarkLens for Windows](https://img.shields.io/badge/Download_for_Windows-MarkLens_1.1.1-2563eb?style=for-the-badge&logo=windows11)](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.1.1.exe)
+[![Download MarkLens for Windows](https://img.shields.io/badge/Download_for_Windows-MarkLens_1.2.0-2563eb?style=for-the-badge&logo=windows11)](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.2.0.exe)
 
 ![Windows 10 and 11](https://img.shields.io/badge/Windows-10%20%7C%2011-2563eb?style=flat-square)
 ![PowerShell 5.1+](https://img.shields.io/badge/PowerShell-5.1%2B-334155?style=flat-square)
@@ -15,13 +15,13 @@ No account, advertisements, telemetry, cloud storage, administrator rights, or i
 
 ## Start in three steps
 
-1. [Download `MarkLens-Setup-v1.1.1.exe`](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.1.1.exe).
+1. [Download `MarkLens-Setup-v1.2.0.exe`](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.2.0.exe).
 2. Run the installer, then choose MarkLens for `.md` and `.markdown` on the Windows Default Apps page that opens.
 3. Double-click any Markdown file.
 
 Windows may ask which application should open Markdown the first time. Choose **MarkLens** and enable **Always**.
 
-> The version 1.x installer is unsigned. SmartScreen may show a warning, while Smart App Control can block unsigned apps entirely. Verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.1.1.exe.sha256) and read [Troubleshooting](docs/TROUBLESHOOTING.md).
+> The version 1.x installer is unsigned. SmartScreen may show a warning, while Smart App Control can block unsigned apps entirely. Verify the [SHA-256 checksum](https://github.com/KonradKazimierowicz/MarkLens/releases/latest/download/MarkLens-Setup-v1.2.0.exe.sha256) and read [Troubleshooting](docs/TROUBLESHOOTING.md).
 
 Need more detail? Read the [installation guide](docs/INSTALLATION.md) or [troubleshooting guide](docs/TROUBLESHOOTING.md).
 
@@ -42,7 +42,14 @@ MarkLens turns local notes, documentation, README files, technical guides, and c
 - **Portable settings:** custom presets plus JSON import and export.
 - **Copy Markdown:** place the complete raw source document on the clipboard in one click.
 - **Print preview:** an ink-friendly document view with readable code, tables, links, and page breaks.
+- **Friendly first run:** choose from five visual styles, then learn every toolbar action in a short guide.
 - **Lightweight installation:** per-user setup with no administrator rights.
+
+## Start with a style, not a settings maze
+
+On first launch, MarkLens offers five complete visual directions: **Ocean Blue, Forest Green, Amber Paper, Plum Focus, and Midnight Cyan**. Selecting a card previews it immediately. A five-step guide then points to the table of contents, light/dark switch, Markdown clipboard, print preview, and Appearance settings.
+
+![MarkLens first-run style picker with five visual presets](docs/images/marklens-first-run.png)
 
 ## Make the Markdown viewer yours
 
@@ -65,7 +72,7 @@ The included [demo document](sample/demo.md) shows raw Markdown beside its rende
 - [x] Highlight fenced code
 
 ```powershell
-Get-FileHash .\MarkLens-Setup-v1.1.1.exe -Algorithm SHA256
+Get-FileHash .\MarkLens-Setup-v1.2.0.exe -Algorithm SHA256
 ```
 ````
 

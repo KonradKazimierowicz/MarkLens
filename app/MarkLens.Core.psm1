@@ -147,6 +147,7 @@ function Get-MarkLensValidatedSettings {
         behavior = [ordered]@{
             showTableOfContents = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','showTableOfContents') $defaults.behavior.showTableOfContents) $defaults.behavior.showTableOfContents
             autoHideToolbar = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','autoHideToolbar') $defaults.behavior.autoHideToolbar) $defaults.behavior.autoHideToolbar
+            onboardingComplete = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','onboardingComplete') $defaults.behavior.onboardingComplete) $defaults.behavior.onboardingComplete
         }
         customPresets = @()
     }
@@ -322,6 +323,7 @@ function New-MarkLensViewerHtml {
     $template = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.template.html'), [Text.Encoding]::UTF8)
     $css = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.css'), [Text.Encoding]::UTF8)
     $appJs = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.js'), [Text.Encoding]::UTF8)
+    $onboardingJs = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.onboarding.js'), [Text.Encoding]::UTF8)
     $marked = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'vendor\marked.umd.js'), [Text.Encoding]::UTF8)
     $purify = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'vendor\purify.min.js'), [Text.Encoding]::UTF8)
     $highlight = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'vendor\highlight.min.js'), [Text.Encoding]::UTF8)
@@ -342,6 +344,7 @@ function New-MarkLensViewerHtml {
         Replace('/*__DOMPURIFY_JS__*/', $purify).
         Replace('/*__HIGHLIGHT_JS__*/', $highlight).
         Replace('/*__MARKLENS_BOOTSTRAP_JSON__*/', $bootstrapJson).
+        Replace('/*__MARKLENS_ONBOARDING_JS__*/', $onboardingJs).
         Replace('/*__MARKLENS_APP_JS__*/', $appJs)
     $cachePath = Get-MarkLensCachePath -DocumentPath $document.FullPath -DataRoot $DataRoot
     $utf8NoBom = New-Object Text.UTF8Encoding($false)

@@ -4,6 +4,7 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 & (Join-Path $PSScriptRoot 'Test-Core.ps1')
 & (Join-Path $PSScriptRoot 'Test-Server.ps1')
 & (Join-Path $PSScriptRoot 'Test-BrowserSecurity.ps1')
+& (Join-Path $PSScriptRoot 'Test-Onboarding.ps1')
 & (Join-Path $PSScriptRoot 'Test-Appearance.ps1')
 & (Join-Path $PSScriptRoot 'Test-Responsive.ps1')
 & (Join-Path $PSScriptRoot 'Test-Print.ps1')
@@ -13,6 +14,8 @@ $node = Get-Command node -ErrorAction SilentlyContinue
 if ($node) {
     & $node.Source --check (Join-Path $repoRoot 'app\viewer.js')
     if ($LASTEXITCODE -ne 0) { throw 'viewer.js syntax validation failed.' }
+    & $node.Source --check (Join-Path $repoRoot 'app\viewer.onboarding.js')
+    if ($LASTEXITCODE -ne 0) { throw 'viewer.onboarding.js syntax validation failed.' }
 }
 else { Write-Warning 'Node.js not found; skipped JavaScript syntax validation.' }
 

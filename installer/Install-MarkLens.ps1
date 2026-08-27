@@ -23,7 +23,7 @@ try {
     if (-not (Test-Path -LiteralPath $PayloadZip -PathType Leaf)) { throw 'The installer payload is missing.' }
     New-Item -ItemType Directory -Path $stageRoot -Force | Out-Null
     Expand-Archive -LiteralPath $PayloadZip -DestinationPath $stageRoot -Force
-    foreach ($relativePath in @('app\MarkLens.ps1','app\MarkLens.Core.psm1','app\viewer.template.html','app\viewer.js','app\viewer.css','app\launch.vbs','install.ps1','uninstall.ps1','VERSION')) {
+    foreach ($relativePath in @('app\MarkLens.ps1','app\MarkLens.Core.psm1','app\viewer.template.html','app\viewer.js','app\viewer.onboarding.js','app\viewer.css','app\launch.vbs','install.ps1','uninstall.ps1','VERSION')) {
         if (-not (Test-Path -LiteralPath (Join-Path $stageRoot $relativePath) -PathType Leaf)) { throw "Incomplete installer payload: $relativePath" }
     }
     New-Item -ItemType Directory -Path $InstallRoot -Force | Out-Null

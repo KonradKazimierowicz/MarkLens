@@ -2,6 +2,20 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [1.2.0] - 2026-08-27
+
+### Added
+
+- A first-run style picker with exactly five previewable reading presets: Ocean Blue, Forest Green, Amber Paper, Plum Focus, and Midnight Cyan.
+- A five-step contextual guide covering the table of contents, theme switch, Markdown clipboard, printing, and Appearance settings.
+- A **Show quick guide** action in Reader behavior for replaying the walkthrough at any time.
+- Keyboard focus management, Escape handling, arrow-key preset navigation, and responsive onboarding coverage down to 320 pixels.
+
+### Changed
+
+- Reworked the built-in preset collection into five distinct, complete light/dark style systems.
+- Resetting appearance no longer causes first-run setup to reappear.
+
 ## [1.1.1] - 2026-08-27
 
 ### Changed

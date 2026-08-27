@@ -86,7 +86,8 @@
   },
   "behavior": {
     "showTableOfContents": false,
-    "autoHideToolbar": true
+    "autoHideToolbar": true,
+    "onboardingComplete": false
   },
   "customPresets": []
 }

@@ -163,6 +163,7 @@
         <h3>Reader behavior</h3>
         <label class="switch-field"><input type="checkbox" data-setting="behavior.showTableOfContents"><span>Show table of contents</span></label>
         <label class="switch-field"><input type="checkbox" data-setting="behavior.autoHideToolbar"><span>Auto-hide toolbar while scrolling</span></label>
+        <button class="secondary-button" id="showGuideButton" type="button">Show quick guide</button>
         <p class="settings-note">Windows requires you to confirm file defaults. MarkLens can open the correct system page for you.</p>
         <button class="secondary-button" id="setDefaultAppButton" type="button">Set MarkLens as default</button>
       </section>
@@ -180,12 +181,42 @@
     </div>
   </aside>
 
+  <div class="onboarding-layer" id="onboardingLayer" aria-hidden="true">
+    <section class="onboarding" id="onboardingDialog" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle" aria-describedby="onboardingDescription">
+      <div class="onboarding__intro">
+        <span class="eyebrow">Welcome to MarkLens</span>
+        <h2 id="onboardingTitle">Choose your reading style</h2>
+        <p id="onboardingDescription">Pick one of five complete themes. You can change every detail later in Appearance.</p>
+      </div>
+      <div class="preset-cards" id="onboardingPresets" role="radiogroup" aria-label="Reading style"></div>
+      <div class="onboarding__footer">
+        <button class="secondary-button" id="skipOnboardingButton" type="button">Skip setup</button>
+        <button class="primary-button" id="continueOnboardingButton" type="button" disabled>Choose a style</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="tour-layer" id="tourLayer" aria-hidden="true">
+    <section class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourDescription">
+      <div class="tour-card__progress"><span id="tourStepLabel">Step 1 of 5</span><div class="tour-dots" id="tourDots" aria-hidden="true"></div></div>
+      <h2 id="tourTitle"></h2>
+      <p id="tourDescription"></p>
+      <div class="tour-card__actions">
+        <button class="secondary-button" id="tourSkipButton" type="button">Close guide</button>
+        <span class="tour-card__spacer"></span>
+        <button class="secondary-button" id="tourBackButton" type="button">Back</button>
+        <button class="primary-button" id="tourNextButton" type="button">Next</button>
+      </div>
+    </section>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script nonce="__MARKLENS_NONCE__">/*__MARKED_JS__*/</script>
   <script nonce="__MARKLENS_NONCE__">/*__DOMPURIFY_JS__*/</script>
   <script nonce="__MARKLENS_NONCE__">/*__HIGHLIGHT_JS__*/</script>
   <script nonce="__MARKLENS_NONCE__">window.__MARKLENS_BOOTSTRAP__ = /*__MARKLENS_BOOTSTRAP_JSON__*/;</script>
+  <script nonce="__MARKLENS_NONCE__">/*__MARKLENS_ONBOARDING_JS__*/</script>
   <script nonce="__MARKLENS_NONCE__">/*__MARKLENS_APP_JS__*/</script>
 </body>
 </html>
