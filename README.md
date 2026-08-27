@@ -28,6 +28,8 @@ MarkLens is a lightweight, local-first Markdown reader for Windows 10 and Window
 3. Run the installer. MarkLens is installed to `%LOCALAPPDATA%\Programs\MarkLens` and registered only for the current user.
 4. Double-click a `.md` or `.markdown` file. If Windows keeps an older default application, use **Open with → Choose another app → MarkLens → Always** once.
 
+For an unattended per-user installation, run `MarkLens-Setup-v1.0.0.exe /Q:U`.
+
 The public installer is intentionally simple and may be unsigned. Windows SmartScreen can therefore show a reputation warning until signed builds are available.
 
 ## Make it yours

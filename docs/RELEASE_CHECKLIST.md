@@ -12,6 +12,7 @@
 - [ ] Custom preset create/delete and JSON import/export work.
 - [ ] PNG and JPEG logo upload/removal, branding-off, hidden header, and filename visibility work.
 - [ ] Update install preserves `%LOCALAPPDATA%\MarkLens`.
+- [ ] Interactive setup completes without a hidden dialog, and `Setup.exe /Q:U` finishes unattended.
 - [ ] Installed Apps uninstall removes program/registry entries and preserves settings.
 
 ## Security and privacy

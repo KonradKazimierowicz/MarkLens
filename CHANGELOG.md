@@ -15,3 +15,7 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 - Separate config, themes, assets, and cache directories under `%LOCALAPPDATA%\MarkLens`.
 - DOMPurify sanitization, restrictive CSP, loopback-only settings bridge, anti-CSRF token, path confinement, input limits, and dependency hash verification.
 - Local Windows verification and installer build tooling, documentation, privacy policy, roadmap, and a manual GitHub Release checklist.
+
+### Fixed
+
+- Installer completion no longer waits indefinitely for a dialog owned by hidden PowerShell; interactive completion auto-closes and `/Q:U` performs a silent install.
