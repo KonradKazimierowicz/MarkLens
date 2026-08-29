@@ -4,6 +4,7 @@
   var bootstrap = window.__MARKLENS_BOOTSTRAP__;
   if (!bootstrap) { throw new Error('MarkLens bootstrap data is missing.'); }
 
+  var workspace = bootstrap.workspace || { isFolder: false, root: bootstrap.document.directory, currentFile: bootstrap.document.fileName, files: [bootstrap.document.fileName] };
   var state = deepClone(bootstrap.settings);
   var defaults = deepClone(bootstrap.defaultSettings || bootstrap.settings);
   var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -27,6 +28,10 @@
     tocToggle: document.getElementById('tocToggle'),
     tocClose: document.getElementById('tocClose'),
     tocCount: document.getElementById('tocCount'),
+    filesPanel: document.getElementById('filesPanel'),
+    filesList: document.getElementById('filesList'),
+    filesCount: document.getElementById('filesCount'),
+    filesClose: document.getElementById('filesClose'),
     settings: document.getElementById('settingsPanel'),
     settingsOverlay: document.getElementById('settingsOverlay'),
     settingsButton: document.getElementById('settingsButton'),
@@ -167,8 +172,10 @@
 
   function syncTocState() {
     var narrow = narrowLayout.matches;
-    var visible = narrow ? mobileTocOpen : state.behavior.showTableOfContents;
-    elements.toc.classList.toggle('is-closed', !narrow && !state.behavior.showTableOfContents);
+    var showPanel = workspace.isFolder || state.behavior.showTableOfContents;
+    var visible = narrow ? mobileTocOpen : showPanel;
+    elements.toc.classList.toggle('is-closed', !narrow && !showPanel);
+    elements.toc.classList.toggle('toc-disabled', workspace.isFolder && !state.behavior.showTableOfContents);
     elements.toc.classList.toggle('mobile-open', narrow && mobileTocOpen);
     elements.tocOverlay.classList.toggle('open', narrow && mobileTocOpen);
     document.body.classList.toggle('toc-open', narrow && mobileTocOpen);
@@ -180,7 +187,7 @@
     mobileTocOpen = true;
     showTopbar();
     syncTocState();
-    elements.tocClose.focus();
+    (workspace.isFolder ? elements.filesClose : elements.tocClose).focus();
   }
 
   function closeMobileToc(restoreFocus) {
@@ -321,11 +328,29 @@
     link.removeAttribute('href'); link.classList.add('unsafe-link'); link.title = 'This local or unsafe link was disabled by MarkLens.';
   }
 
+  function currentFileDirectory() {
+    var separator = String(workspace.currentFile || '').lastIndexOf('/');
+    return separator >= 0 ? workspace.currentFile.substring(0, separator) : '';
+  }
+
+  function resolveDocumentAssetPath(raw) {
+    var directory = currentFileDirectory();
+    var parts = directory ? directory.split('/') : [];
+    var escaped = false;
+    raw.replace(/\\/g, '/').split('/').forEach(function (segment) {
+      if (!segment || segment === '.') { return; }
+      if (segment === '..') { if (parts.length) { parts.pop(); } else { escaped = true; } }
+      else { parts.push(segment); }
+    });
+    if (escaped) { return '..'; }
+    return parts.join('/');
+  }
+
   function safeImage(image) {
     var raw = (image.getAttribute('src') || '').trim();
     if (/^data:image\/(png|jpeg|gif|webp);base64,[a-z0-9+/=\s]+$/i.test(raw)) { return; }
     if (raw && !/^[a-z][a-z0-9+.-]*:/i.test(raw) && raw.indexOf('//') !== 0) {
-      image.src = '/api/document-asset?path=' + encodeURIComponent(raw.replace(/\\/g, '/'));
+      image.src = '/api/document-asset?path=' + encodeURIComponent(resolveDocumentAssetPath(raw));
       image.loading = 'lazy'; image.referrerPolicy = 'no-referrer'; return;
     }
     image.removeAttribute('src'); image.alt = (image.alt || 'Image') + ' (blocked by privacy settings)';
@@ -391,6 +416,74 @@
       });
     }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
     headings.forEach(function (heading) { observer.observe(heading); });
+  }
+
+  function renderFilesList() {
+    elements.filesList.textContent = '';
+    workspace.files.forEach(function (file) {
+      var link = document.createElement('a');
+      link.href = '#';
+      link.setAttribute('data-file', file);
+      link.title = file;
+      link.classList.toggle('active', file === workspace.currentFile);
+      var separator = file.lastIndexOf('/');
+      var name = document.createElement('strong');
+      name.textContent = separator >= 0 ? file.substring(separator + 1) : file;
+      link.appendChild(name);
+      if (separator >= 0) {
+        var folder = document.createElement('small');
+        folder.textContent = file.substring(0, separator);
+        link.appendChild(folder);
+      }
+      elements.filesList.appendChild(link);
+    });
+    elements.filesCount.textContent = workspace.files.length ? String(workspace.files.length) : '';
+  }
+
+  function openWorkspaceFile(file) {
+    if (file === workspace.currentFile) { return; }
+    api('/api/document?path=' + encodeURIComponent(file))
+      .then(function (documentPayload) {
+        bootstrap.document.fileName = documentPayload.fileName;
+        bootstrap.document.fullPath = documentPayload.fullPath;
+        bootstrap.document.markdownBase64 = documentPayload.markdownBase64;
+        workspace.currentFile = documentPayload.relativePath || file;
+        renderMarkdown();
+        applySettings();
+        window.scrollTo(0, 0);
+        renderFilesList();
+      })
+      .catch(function () {
+        showToast('Could not open ' + file + '. It may have been moved or deleted.');
+        refreshWorkspaceFiles();
+      });
+  }
+
+  function refreshWorkspaceFiles() {
+    api('/api/files').then(function (payload) {
+      var files = payload && payload.files ? payload.files : [];
+      if (JSON.stringify(files) !== JSON.stringify(workspace.files)) {
+        workspace.files = files;
+        renderFilesList();
+      }
+    }).catch(function () { /* the next poll retries */ });
+  }
+
+  function initializeWorkspace() {
+    if (!workspace.isFolder) { return; }
+    document.body.classList.add('folder-mode');
+    elements.toc.setAttribute('aria-label', 'Files and table of contents');
+    renderFilesList();
+    elements.filesList.addEventListener('click', function (event) {
+      var link = event.target.closest('a[data-file]');
+      if (!link) { return; }
+      event.preventDefault();
+      closeMobileToc(false);
+      openWorkspaceFile(link.getAttribute('data-file'));
+    });
+    elements.filesClose.addEventListener('click', function () { closeMobileToc(true); });
+    window.setInterval(refreshWorkspaceFiles, 3000);
+    syncTocState();
   }
 
   function openSettings() { document.body.classList.add('settings-open'); elements.settings.setAttribute('aria-hidden', 'false'); elements.settingsClose.focus(); }
@@ -509,7 +602,7 @@
     window.addEventListener('pagehide', function () { fetch('/api/shutdown', { method: 'POST', headers: { 'X-MarkLens-Token': bootstrap.csrfToken }, keepalive: true }).catch(function () {}); });
   }
 
-  initializeForm(); applySettings(); renderMarkdown(); bindEvents();
+  initializeForm(); applySettings(); renderMarkdown(); bindEvents(); initializeWorkspace();
   if (window.MarkLensOnboarding) {
     window.MarkLensOnboarding.create({
       presets: bootstrap.builtInPresets,

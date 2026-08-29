@@ -116,7 +116,17 @@ body.no-header .toc { top: 24px; max-height: calc(100vh - 48px); }
 .toc a.active { color: var(--reader-accent); border-left-color: var(--reader-accent); background: color-mix(in srgb, var(--reader-accent) 8%, transparent); font-weight: 600; }
 .toc a[data-level="2"] { padding-left: 20px; }.toc a[data-level="3"] { padding-left: 30px; }.toc a[data-level="4"] { padding-left: 40px; font-size: 12px; }
 .toc.is-closed { display: none; }
+.toc.toc-disabled #tocHeader, .toc.toc-disabled #tocList { display: none; }
 .toc-overlay { display: none; }
+.files { display: none; }
+body.folder-mode .files { display: block; border-bottom: 1px solid color-mix(in srgb, var(--reader-border) 70%, transparent); padding-bottom: 10px; margin-bottom: 4px; }
+body.folder-mode .toc.toc-disabled .files { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+body.folder-mode #tocHeader .toc__close { display: none; }
+.files__header { position: sticky; top: 0; }
+.files nav { padding-top: 4px; }
+.files a strong { display: block; font-weight: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.files a small { display: block; color: var(--reader-muted); font-size: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.files a.active strong { font-weight: 600; }
 .content-shell { min-width: 0; width: 100%; padding: 24px; }
 .markdown-body {
   max-width: var(--reader-max-width); min-height: 40vh; margin: 0 auto; padding: var(--reader-padding);

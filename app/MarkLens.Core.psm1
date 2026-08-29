@@ -3,6 +3,7 @@ Set-StrictMode -Version 2.0
 $script:ApplicationName = 'MarkLens'
 $script:MaxDocumentBytes = 10MB
 $script:MaxSettingsBytes = 256KB
+$script:MaxWorkspaceFiles = 500
 
 function ConvertTo-MarkLensHashtable {
     param([Parameter(ValueFromPipeline = $true)]$InputObject)
@@ -302,6 +303,84 @@ function Get-MarkLensDocument {
     }
 }
 
+function Test-MarkLensPathHasReparsePoint {
+    param([string]$Root, [string]$RelativePath)
+    $cursor = [IO.Path]::GetFullPath($Root)
+    foreach ($segment in $RelativePath.Split(@('\','/'), [StringSplitOptions]::RemoveEmptyEntries)) {
+        if ($segment -eq '.') { continue }
+        if ($segment -eq '..') { return $true }
+        $cursor = Join-Path $cursor $segment
+        if (Test-Path -LiteralPath $cursor) {
+            $item = Get-Item -LiteralPath $cursor -Force
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { return $true }
+        }
+    }
+    return $false
+}
+
+function Get-MarkLensRelativePath {
+    param([Parameter(Mandatory = $true)][string]$Root, [Parameter(Mandatory = $true)][string]$FullPath)
+    $rootFull = [IO.Path]::GetFullPath($Root).TrimEnd('\', '/')
+    $full = [IO.Path]::GetFullPath($FullPath)
+    if ($full.Length -le $rootFull.Length) { return '' }
+    return $full.Substring($rootFull.Length).TrimStart('\', '/').Replace('\', '/')
+}
+
+function Get-MarkLensWorkspaceFiles {
+    param([Parameter(Mandatory = $true)][string]$Root)
+    $rootFull = [IO.Path]::GetFullPath($Root)
+    $excludedDirectories = @('node_modules')
+    $results = New-Object Collections.Generic.List[string]
+    $queue = New-Object Collections.Generic.Queue[string]
+    $queue.Enqueue($rootFull)
+    while ($queue.Count -gt 0 -and $results.Count -lt $script:MaxWorkspaceFiles) {
+        $current = $queue.Dequeue()
+        foreach ($entry in @(Get-ChildItem -LiteralPath $current -Force -ErrorAction SilentlyContinue)) {
+            if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { continue }
+            if ($entry.PSIsContainer) {
+                if ($entry.Name.StartsWith('.') -or $excludedDirectories -contains $entry.Name.ToLowerInvariant()) { continue }
+                $queue.Enqueue($entry.FullName)
+            }
+            elseif ([IO.Path]::GetExtension($entry.Name).ToLowerInvariant() -in @('.md', '.markdown')) {
+                $results.Add((Get-MarkLensRelativePath -Root $rootFull -FullPath $entry.FullName))
+                if ($results.Count -ge $script:MaxWorkspaceFiles) { break }
+            }
+        }
+    }
+    return @($results.ToArray() | Sort-Object { $_.ToLowerInvariant() })
+}
+
+function Get-MarkLensWorkspace {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    if (Test-Path -LiteralPath $Path -PathType Container) {
+        $root = (Resolve-Path -LiteralPath $Path).Path
+        $files = @(Get-MarkLensWorkspaceFiles -Root $root)
+        if ($files.Count -eq 0) { throw 'No .md or .markdown files were found in this folder.' }
+        $initial = @($files | Where-Object { $_ -match '^readme\.(md|markdown)$' }) | Select-Object -First 1
+        if (-not $initial) { $initial = $files[0] }
+        return [ordered]@{
+            IsFolder = $true
+            Root = $root
+            Files = $files
+            InitialFile = [IO.Path]::GetFullPath((Join-Path $root ($initial.Replace('/', [string][IO.Path]::DirectorySeparatorChar))))
+        }
+    }
+    $document = Get-MarkLensDocument -Path $Path
+    return [ordered]@{ IsFolder = $false; Root = $document.Directory; Files = @($document.FileName); InitialFile = $document.FullPath }
+}
+
+function Get-MarkLensWorkspaceDocument {
+    param([Parameter(Mandatory = $true)][string]$Root, [Parameter(Mandatory = $true)][string]$RelativePath)
+    $relative = ([string]$RelativePath).Replace('/', [string][IO.Path]::DirectorySeparatorChar)
+    if ([string]::IsNullOrWhiteSpace($relative)) { throw 'The document path is empty.' }
+    if ([IO.Path]::IsPathRooted($relative)) { throw 'Absolute document paths are blocked.' }
+    if (Test-MarkLensPathHasReparsePoint -Root $Root -RelativePath $relative) { throw 'Reparse-point document paths are blocked.' }
+    $fullPath = [IO.Path]::GetFullPath((Join-Path $Root $relative))
+    $rootPrefix = [IO.Path]::GetFullPath($Root).TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    if (-not $fullPath.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'The document path leaves the opened folder.' }
+    return Get-MarkLensDocument -Path $fullPath
+}
+
 function Get-MarkLensCachePath {
     param([Parameter(Mandatory = $true)][string]$DocumentPath, [string]$DataRoot)
     $paths = Initialize-MarkLensData -DataRoot $DataRoot
@@ -316,9 +395,13 @@ function New-MarkLensViewerHtml {
     param(
         [Parameter(Mandatory = $true)][string]$DocumentPath,
         [Parameter(Mandatory = $true)][string]$CsrfToken,
-        [string]$DataRoot
+        [string]$DataRoot,
+        $Workspace
     )
     $document = Get-MarkLensDocument -Path $DocumentPath
+    if (-not $Workspace) {
+        $Workspace = [ordered]@{ IsFolder = $false; Root = $document.Directory; Files = @($document.FileName); InitialFile = $document.FullPath }
+    }
     $settings = Read-MarkLensSettings -DataRoot $DataRoot
     $template = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.template.html'), [Text.Encoding]::UTF8)
     $css = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'viewer.css'), [Text.Encoding]::UTF8)
@@ -331,6 +414,12 @@ function New-MarkLensViewerHtml {
     $bootstrap = [pscustomobject]@{
         csrfToken = $CsrfToken
         document = [ordered]@{ fileName = $document.FileName; fullPath = $document.FullPath; directory = $document.Directory; markdownBase64 = $document.Base64 }
+        workspace = [ordered]@{
+            isFolder = [bool]$Workspace.IsFolder
+            root = $Workspace.Root
+            currentFile = Get-MarkLensRelativePath -Root $Workspace.Root -FullPath $document.FullPath
+            files = @($Workspace.Files)
+        }
         settings = $settings
         defaultSettings = Get-MarkLensValidatedSettings -Candidate @{}
         builtInPresets = @($presets)
@@ -355,5 +444,7 @@ function New-MarkLensViewerHtml {
 Export-ModuleMember -Function @(
     'ConvertTo-MarkLensHashtable', 'Get-MarkLensDefaultSettings', 'Get-MarkLensValidatedSettings',
     'Get-MarkLensPaths', 'Initialize-MarkLensData', 'Read-MarkLensSettings', 'Save-MarkLensSettings',
-    'Get-MarkLensDocument', 'Get-MarkLensCachePath', 'New-MarkLensViewerHtml'
+    'Get-MarkLensDocument', 'Get-MarkLensCachePath', 'New-MarkLensViewerHtml',
+    'Test-MarkLensPathHasReparsePoint', 'Get-MarkLensRelativePath', 'Get-MarkLensWorkspaceFiles',
+    'Get-MarkLensWorkspace', 'Get-MarkLensWorkspaceDocument'
 )

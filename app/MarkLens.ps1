@@ -1,13 +1,14 @@
 <#
 .SYNOPSIS
-    Opens a local Markdown file in MarkLens.
+    Opens a local Markdown file or a folder of Markdown files in MarkLens.
 .DESCRIPTION
     Generates a self-contained viewer snapshot in the per-user cache, serves it only
     on the IPv4 loopback interface, and launches Microsoft Edge in app mode. The
     loopback bridge exists so the settings panel can persist configuration without a
-    cloud service or an elevated helper.
+    cloud service or an elevated helper. When a folder is opened, the reader lists
+    every Markdown file inside it and lets the viewer switch between them.
 .PARAMETER Path
-    Path to a .md or .markdown file.
+    Path to a .md or .markdown file, or to a folder containing Markdown files.
 .PARAMETER NoLaunch
     Generate and print the cached HTML path without starting a browser or server.
 .PARAMETER DataRoot
@@ -152,21 +153,6 @@ function Confirm-MarkLensMutationToken {
     return $false
 }
 
-function Test-MarkLensPathHasReparsePoint {
-    param([string]$Root, [string]$RelativePath)
-    $cursor = [IO.Path]::GetFullPath($Root)
-    foreach ($segment in $RelativePath.Split(@('\','/'), [StringSplitOptions]::RemoveEmptyEntries)) {
-        if ($segment -eq '.') { continue }
-        if ($segment -eq '..') { return $true }
-        $cursor = Join-Path $cursor $segment
-        if (Test-Path -LiteralPath $cursor) {
-            $item = Get-Item -LiteralPath $cursor -Force
-            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { return $true }
-        }
-    }
-    return $false
-}
-
 function Get-MarkLensMimeType {
     param([string]$Extension)
     switch ($Extension.ToLowerInvariant()) {
@@ -185,8 +171,9 @@ function Test-MarkLensImageBytes {
 }
 
 try {
-    if ([string]::IsNullOrWhiteSpace($Path)) { throw 'No Markdown file path was provided.' }
-    $document = Get-MarkLensDocument -Path $Path
+    if ([string]::IsNullOrWhiteSpace($Path)) { throw 'No Markdown file or folder path was provided.' }
+    $workspace = Get-MarkLensWorkspace -Path $Path
+    $document = Get-MarkLensDocument -Path $workspace.InitialFile
     $dataPaths = Initialize-MarkLensData -DataRoot $DataRoot
     $tokenBytes = New-Object byte[] 32
     $random = [Security.Cryptography.RandomNumberGenerator]::Create()
@@ -194,7 +181,7 @@ try {
     $token = [Convert]::ToBase64String($tokenBytes).TrimEnd('=').Replace('+', '-').Replace('/', '_')
 
     if ($NoLaunch) {
-        $generated = New-MarkLensViewerHtml -DocumentPath $document.FullPath -CsrfToken $token -DataRoot $dataPaths.Root
+        $generated = New-MarkLensViewerHtml -DocumentPath $document.FullPath -CsrfToken $token -DataRoot $dataPaths.Root -Workspace $workspace
         Write-Output $generated.CachePath
         exit 0
     }
@@ -231,7 +218,8 @@ try {
 
             if ($request.Method -eq 'GET' -and $route -eq '/') {
                 $shutdownAfter = $null
-                $generated = New-MarkLensViewerHtml -DocumentPath $document.FullPath -CsrfToken $token -DataRoot $dataPaths.Root
+                if ($workspace.IsFolder) { $workspace.Files = @(Get-MarkLensWorkspaceFiles -Root $workspace.Root) }
+                $generated = New-MarkLensViewerHtml -DocumentPath $document.FullPath -CsrfToken $token -DataRoot $dataPaths.Root -Workspace $workspace
                 $body = [Text.Encoding]::UTF8.GetBytes($generated.Html)
                 $csp = "default-src 'none'; script-src 'nonce-$token'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'"
                 Write-MarkLensHttpResponse -Stream $stream -ContentType 'text/html; charset=utf-8' -Body $body -Headers @{ 'Content-Security-Policy' = $csp }
@@ -294,15 +282,35 @@ try {
                 }
                 catch { Write-MarkLensHttpResponse -Stream $stream -Status 500 -Body ([Text.Encoding]::UTF8.GetBytes('Could not open Windows Default Apps.')) }
             }
+            elseif ($request.Method -eq 'GET' -and $route -eq '/api/files') {
+                if ($workspace.IsFolder) { $workspace.Files = @(Get-MarkLensWorkspaceFiles -Root $workspace.Root) }
+                $payload = [ordered]@{ isFolder = [bool]$workspace.IsFolder; root = $workspace.Root; files = @($workspace.Files) }
+                Write-MarkLensHttpResponse -Stream $stream -ContentType 'application/json; charset=utf-8' -Body (ConvertTo-MarkLensJsonBytes $payload)
+            }
+            elseif ($request.Method -eq 'GET' -and $route -eq '/api/document') {
+                try {
+                    if ($targetParts.Count -ne 2 -or $targetParts[1] -notmatch '^path=(.*)$') { throw 'Missing document path.' }
+                    $relative = [Uri]::UnescapeDataString($Matches[1])
+                    $switched = Get-MarkLensWorkspaceDocument -Root $workspace.Root -RelativePath $relative
+                    $document = $switched
+                    $payload = [ordered]@{
+                        fileName = $switched.FileName
+                        fullPath = $switched.FullPath
+                        relativePath = Get-MarkLensRelativePath -Root $workspace.Root -FullPath $switched.FullPath
+                        markdownBase64 = $switched.Base64
+                    }
+                    Write-MarkLensHttpResponse -Stream $stream -ContentType 'application/json; charset=utf-8' -Body (ConvertTo-MarkLensJsonBytes $payload)
+                } catch { Write-MarkLensHttpResponse -Stream $stream -Status 404 -Body ([Text.Encoding]::UTF8.GetBytes('Document unavailable.')) }
+            }
             elseif ($request.Method -eq 'GET' -and $route -eq '/api/document-asset') {
                 try {
                     if ($targetParts.Count -ne 2 -or $targetParts[1] -notmatch '^path=(.*)$') { throw 'Missing asset path.' }
                     $relative = [Uri]::UnescapeDataString($Matches[1]).Replace('/', [IO.Path]::DirectorySeparatorChar)
                     if ([IO.Path]::IsPathRooted($relative)) { throw 'Absolute asset paths are blocked.' }
-                    if (Test-MarkLensPathHasReparsePoint -Root $document.Directory -RelativePath $relative) { throw 'Reparse-point assets are blocked.' }
-                    $assetPath = [IO.Path]::GetFullPath((Join-Path $document.Directory $relative))
-                    $documentRoot = [IO.Path]::GetFullPath($document.Directory).TrimEnd('\') + '\'
-                    if (-not $assetPath.StartsWith($documentRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'Asset path leaves the document folder.' }
+                    if (Test-MarkLensPathHasReparsePoint -Root $workspace.Root -RelativePath $relative) { throw 'Reparse-point assets are blocked.' }
+                    $assetPath = [IO.Path]::GetFullPath((Join-Path $workspace.Root $relative))
+                    $documentRoot = [IO.Path]::GetFullPath($workspace.Root).TrimEnd('\') + '\'
+                    if (-not $assetPath.StartsWith($documentRoot, [StringComparison]::OrdinalIgnoreCase)) { throw 'Asset path leaves the opened folder.' }
                     $mime = Get-MarkLensMimeType ([IO.Path]::GetExtension($assetPath))
                     if (-not $mime -or -not (Test-Path -LiteralPath $assetPath -PathType Leaf)) { throw 'Asset type is not allowed or file is missing.' }
                     $assetItem = Get-Item -LiteralPath $assetPath

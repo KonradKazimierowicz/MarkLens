@@ -54,7 +54,16 @@
 
   <div class="reader-layout" id="readerLayout">
     <aside class="toc" id="tocPanel" aria-label="Table of contents" aria-hidden="true">
-      <div class="toc__header">
+      <section class="files" id="filesPanel" aria-label="Markdown files in this folder">
+        <div class="toc__header files__header">
+          <div class="toc__title"><span>Files</span><small id="filesCount"></small></div>
+          <button class="icon-button toc__close" id="filesClose" type="button" aria-label="Close navigation panel">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"/></svg>
+          </button>
+        </div>
+        <nav id="filesList"></nav>
+      </section>
+      <div class="toc__header" id="tocHeader">
         <div class="toc__title"><span>On this page</span><small id="tocCount"></small></div>
         <button class="icon-button toc__close" id="tocClose" type="button" aria-label="Close table of contents">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"/></svg>

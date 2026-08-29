@@ -63,6 +63,47 @@ try {
     Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/shutdown') -Method Post -Headers @{ 'X-MarkLens-Token'=$token } | Out-Null
     $process.WaitForExit(7000) | Out-Null
     Assert-True $process.HasExited 'Loopback server should stop after the viewer closes.'
+    $process = $null
+
+    # Folder mode: the server should list workspace files, serve them by relative
+    # path, pick up newly created files, and refuse to escape the opened folder.
+    Set-Content -LiteralPath (Join-Path $documentRoot 'second.md') -Value '# Second document'
+    Set-Content -LiteralPath (Join-Path $outsideRoot 'secret.md') -Value '# Outside'
+    $folderReadyFile = Join-Path $testRoot 'ready-folder.txt'
+    $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',$documentRoot,'-DataRoot',$testRoot,'-NoBrowser','-ReadyFile',$folderReadyFile)
+    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $arguments -WindowStyle Hidden -PassThru
+    $deadline = (Get-Date).AddSeconds(12)
+    while (-not (Test-Path -LiteralPath $folderReadyFile -PathType Leaf) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 100 }
+    Assert-True (Test-Path -LiteralPath $folderReadyFile -PathType Leaf) 'Folder-mode loopback server did not become ready.'
+    $url = [IO.File]::ReadAllText($folderReadyFile).Trim()
+
+    $page = Invoke-WebRequest -UseBasicParsing -Uri $url
+    Assert-True ($page.Content -match '"isFolder":true') 'Folder mode should be announced to the viewer bootstrap.'
+
+    $listing = Invoke-RestMethod -Uri ($url + 'api/files')
+    Assert-True ([bool]$listing.isFolder) 'The file listing should report folder mode.'
+    Assert-True (@($listing.files) -contains 'second.md' -and @($listing.files) -contains 'security-demo.md') 'The file listing should include every Markdown file in the folder.'
+    Assert-True (-not (@($listing.files) -contains 'linked/secret.md')) 'The file listing must not traverse junctions.'
+
+    $switched = Invoke-RestMethod -Uri ($url + 'api/document?path=second.md')
+    Assert-True ($switched.fileName -eq 'second.md') 'Workspace documents should be served by relative path.'
+    Assert-True ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($switched.markdownBase64)) -match 'Second document') 'Workspace documents should return their Markdown source.'
+
+    foreach ($blocked in @('..%2Fsecret.md', 'linked%2Fsecret.md', 'C%3A%5CWindows%5Cwin.ini')) {
+        $documentStatus = 0
+        try { Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/document?path=' + $blocked) | Out-Null }
+        catch { $documentStatus = [int]$_.Exception.Response.StatusCode }
+        Assert-True ($documentStatus -eq 404) "Workspace documents must not escape the opened folder: $blocked"
+    }
+
+    Set-Content -LiteralPath (Join-Path $documentRoot 'created-later.md') -Value '# Created while open'
+    $refreshed = Invoke-RestMethod -Uri ($url + 'api/files')
+    Assert-True (@($refreshed.files) -contains 'created-later.md') 'New Markdown files should appear in the listing while the folder is open.'
+
+    Assert-True ($page.Content -match '"csrfToken":"([^"]+)"') 'Folder-mode bootstrap token is missing.'
+    Invoke-WebRequest -UseBasicParsing -Uri ($url + 'api/shutdown') -Method Post -Headers @{ 'X-MarkLens-Token'=$Matches[1] } | Out-Null
+    $process.WaitForExit(7000) | Out-Null
+    Assert-True $process.HasExited 'Folder-mode loopback server should stop after the viewer closes.'
     Write-Host 'Server security tests passed.' -ForegroundColor Green
 }
 finally {
