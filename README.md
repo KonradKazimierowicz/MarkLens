@@ -46,6 +46,12 @@ MarkLens turns local notes, documentation, README files, technical guides, and c
 - **Friendly first run:** choose from five visual styles, then learn every toolbar action in a short guide.
 - **Lightweight installation:** per-user setup with no administrator rights.
 
+## Open one file or a whole project
+
+Point MarkLens at a project folder and every Markdown file inside appears in a **Files** list beside the document. Switch between README, changelog, and docs without leaving the reader — and files created while the project is open show up in the list automatically.
+
+![MarkLens project folder mode showing a side list of six Markdown files with their subfolders next to the rendered document and its table of contents](docs/images/marklens-folder-mode.png)
+
 ## Start with a style, not a settings maze
 
 On first launch, MarkLens offers five complete visual directions: **Ocean Blue, Forest Green, Amber Paper, Plum Focus, and Midnight Cyan**. Selecting a card previews it immediately. A five-step guide then points to the table of contents, light/dark switch, Markdown clipboard, print preview, and Appearance settings.
