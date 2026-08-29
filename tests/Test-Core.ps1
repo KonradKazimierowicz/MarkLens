@@ -44,6 +44,40 @@ try {
     $roundTrip = Read-MarkLensSettings -DataRoot $testRoot
     Assert-Equal $roundTrip.typography.fontSize 24 'Saved settings should round-trip.'
     Assert-True ($roundTrip.customPresets.Count -eq 1) 'Custom presets should round-trip with settings.'
+
+    $workspaceRoot = Join-Path $testRoot 'workspace'
+    foreach ($directory in @('docs', 'node_modules\package', '.hidden')) {
+        New-Item -ItemType Directory -Path (Join-Path $workspaceRoot $directory) -Force | Out-Null
+    }
+    Set-Content -LiteralPath (Join-Path $workspaceRoot 'README.md') -Value '# Readme'
+    Set-Content -LiteralPath (Join-Path $workspaceRoot 'notes.md') -Value '# Notes'
+    Set-Content -LiteralPath (Join-Path $workspaceRoot 'docs\guide.markdown') -Value '# Guide'
+    Set-Content -LiteralPath (Join-Path $workspaceRoot 'docs\image.png') -Value 'not markdown'
+    Set-Content -LiteralPath (Join-Path $workspaceRoot 'node_modules\package\skipped.md') -Value '# Skipped'
+    Set-Content -LiteralPath (Join-Path $workspaceRoot '.hidden\skipped.md') -Value '# Skipped'
+    New-Item -ItemType Junction -Path (Join-Path $workspaceRoot 'linked') -Target $testRoot | Out-Null
+
+    $workspace = Get-MarkLensWorkspace -Path $workspaceRoot
+    Assert-True $workspace.IsFolder 'A folder path should open in folder mode.'
+    Assert-Equal (@($workspace.Files) -join '|') 'docs/guide.markdown|notes.md|README.md' 'Workspace scans must list Markdown files recursively, sorted, and skip hidden, dependency, and junction directories.'
+    Assert-Equal ([IO.Path]::GetFileName($workspace.InitialFile)) 'README.md' 'Folder mode should open the README first.'
+
+    $fileWorkspace = Get-MarkLensWorkspace -Path $samplePath
+    Assert-True (-not $fileWorkspace.IsFolder) 'A file path should keep single-file mode.'
+    Assert-Equal (@($fileWorkspace.Files) -join '|') 'security-demo.md' 'Single-file mode should expose only the opened document.'
+
+    $switched = Get-MarkLensWorkspaceDocument -Root $workspaceRoot -RelativePath 'docs/guide.markdown'
+    Assert-Equal $switched.FileName 'guide.markdown' 'Workspace documents should resolve by relative path.'
+    foreach ($blocked in @('..\..\Windows\win.ini', 'docs/../../escape.md', 'linked/README.md', 'C:\Windows\win.ini', 'docs/image.png')) {
+        $failed = $false
+        try { Get-MarkLensWorkspaceDocument -Root $workspaceRoot -RelativePath $blocked | Out-Null } catch { $failed = $true }
+        Assert-True $failed "Workspace documents must reject unsafe path: $blocked"
+    }
+
+    $folderHtml = New-MarkLensViewerHtml -DocumentPath $workspace.InitialFile -CsrfToken 'test_nonce_123' -DataRoot $testRoot -Workspace $workspace
+    Assert-True ($folderHtml.Html.Contains('"isFolder":true')) 'Folder mode should be announced to the viewer bootstrap.'
+    Assert-True ($folderHtml.Html.Contains('docs/guide.markdown')) 'Folder mode bootstrap should list workspace files.'
+    Assert-True ($generated.Html.Contains('"isFolder":false')) 'Single-file mode should be announced to the viewer bootstrap.'
     Write-Host 'Core tests passed.' -ForegroundColor Green
 }
 finally {

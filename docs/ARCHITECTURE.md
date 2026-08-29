@@ -10,7 +10,8 @@ Explorer file association
 app/launch.vbs (hidden process shim)
         ↓
 app/MarkLens.ps1
-        ├── validate source path, extension, and size
+        ├── validate source file or folder, extensions, and size
+        ├── scan folder workspaces for Markdown files (no junctions, hidden, or node_modules)
         ├── bind random port on 127.0.0.1 only
         ├── load app/MarkLens.Core.psm1
         └── start Microsoft Edge --app

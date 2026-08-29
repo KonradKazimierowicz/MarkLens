@@ -34,6 +34,7 @@ MarkLens turns local notes, documentation, README files, technical guides, and c
 ## Why MarkLens?
 
 - **Native Windows flow:** double-click Markdown in File Explorer.
+- **Project folder mode:** open a folder to browse every Markdown file inside it from a side file list, with newly created files appearing automatically.
 - **Offline by default:** documents and settings stay on this computer.
 - **GitHub-flavored Markdown:** tables, task lists, quotes, links, and fenced code.
 - **Syntax highlighting:** readable code blocks without an editor.
@@ -102,6 +103,12 @@ git clone https://github.com/KonradKazimierowicz/MarkLens.git
 cd MarkLens
 npm ci --ignore-scripts
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MarkLens.ps1 -Path .\sample\demo.md
+```
+
+Or open a whole project folder — MarkLens lists every Markdown file inside it and keeps the list current while you work:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MarkLens.ps1 -Path .
 ```
 
 Run the complete verification suite:

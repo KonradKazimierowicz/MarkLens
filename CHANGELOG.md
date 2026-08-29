@@ -2,7 +2,17 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
-## [1.2.0] - 2026-08-27
+## [Unreleased]
+
+### Added
+
+- **Project folder mode:** MarkLens now opens a whole folder. The reader finds every `.md` and `.markdown` file inside it (skipping hidden and `node_modules` directories), starts on the README when one exists, and shows a **Files** list in the side panel for switching between documents without leaving the reader.
+- The file list refreshes automatically, so Markdown files created, renamed, or deleted while the folder is open appear in the list within a few seconds.
+- New loopback routes `GET /api/files` and `GET /api/document` behind the same relative-path, junction, and folder-escape validation as document assets.
+
+### Changed
+
+- Relative images now resolve against the current document in folder mode and remain confined to the opened folder.
 
 ### Added
 
