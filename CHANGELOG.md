@@ -2,6 +2,12 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [1.3.1] - 2026-08-31
+
+### Fixed
+
+- Opening an individual Markdown file now automatically discovers other `.md` and `.markdown` files in its containing folder and shows them in the **Files** panel, while keeping the originally opened document active.
+
 ## [1.3.0] - 2026-08-31
 
 ### Added

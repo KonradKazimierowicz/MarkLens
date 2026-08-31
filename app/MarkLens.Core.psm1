@@ -366,7 +366,13 @@ function Get-MarkLensWorkspace {
         }
     }
     $document = Get-MarkLensDocument -Path $Path
-    return [ordered]@{ IsFolder = $false; Root = $document.Directory; Files = @($document.FileName); InitialFile = $document.FullPath }
+    $files = @(Get-MarkLensWorkspaceFiles -Root $document.Directory)
+    return [ordered]@{
+        IsFolder = $true
+        Root = $document.Directory
+        Files = $files
+        InitialFile = $document.FullPath
+    }
 }
 
 function Get-MarkLensWorkspaceDocument {

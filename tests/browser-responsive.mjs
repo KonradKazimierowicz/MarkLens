@@ -19,6 +19,10 @@ try {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await page.locator('#content h1').waitFor();
 
+  assert(await page.locator('#filesPanel').isVisible(), 'Opening one Markdown file should show the containing folder file list.');
+  assert(await page.locator('#filesList a').count() === 2, 'The file list should include the opened document and its Markdown sibling.');
+  assert(await page.locator('#filesList a.active').count() === 1, 'The originally opened Markdown file should remain active.');
+
   assert(await page.locator('#reloadButton').count() === 0, 'The removed reload action should not remain in the toolbar.');
   assert(await page.locator('#printButton').isVisible(), 'Print / preview should be visible in the toolbar.');
   assert(await page.locator('#copyPathButton').count() === 0, 'The old copy-path action should not remain in the toolbar.');

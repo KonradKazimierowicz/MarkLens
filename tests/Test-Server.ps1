@@ -10,6 +10,7 @@ $outsideRoot = Join-Path $testRoot 'outside'
 New-Item -ItemType Directory -Path $documentRoot,$outsideRoot -Force | Out-Null
 $documentPath = Join-Path $documentRoot 'security-demo.md'
 Copy-Item -LiteralPath (Join-Path $repoRoot 'sample\security-demo.md') -Destination $documentPath
+Set-Content -LiteralPath (Join-Path $documentRoot 'second.md') -Value '# Second document'
 [IO.File]::WriteAllBytes((Join-Path $outsideRoot 'secret.png'), [byte[]](0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a))
 New-Item -ItemType Junction -Path (Join-Path $documentRoot 'linked') -Target $outsideRoot | Out-Null
 $process = $null
@@ -23,6 +24,10 @@ try {
     Assert-True ($url -match '^http://127\.0\.0\.1:\d+/$') 'Server must bind to the IPv4 loopback interface.'
     $page = Invoke-WebRequest -UseBasicParsing -Uri $url
     Assert-True ($page.StatusCode -eq 200) 'Viewer endpoint should return HTTP 200.'
+    Assert-True ($page.Content -match '"isFolder":true') 'Opening a Markdown file should automatically enable folder mode.'
+    Assert-True ($page.Content -match '"currentFile":"security-demo.md"') 'Opening a Markdown file should keep that file active.'
+    $fileListing = Invoke-RestMethod -Uri ($url + 'api/files')
+    Assert-True (@($fileListing.files) -contains 'second.md' -and @($fileListing.files) -contains 'security-demo.md') 'Opening a Markdown file should discover sibling Markdown files.'
     # Windows PowerShell exposes a header as a string, while PowerShell 7 may
     # expose the same value as a string collection. Normalize both shapes.
     $contentSecurityPolicy = [string]::Join(', ', [string[]]$page.Headers['Content-Security-Policy'])
@@ -67,7 +72,6 @@ try {
 
     # Folder mode: the server should list workspace files, serve them by relative
     # path, pick up newly created files, and refuse to escape the opened folder.
-    Set-Content -LiteralPath (Join-Path $documentRoot 'second.md') -Value '# Second document'
     Set-Content -LiteralPath (Join-Path $outsideRoot 'secret.md') -Value '# Outside'
     $folderReadyFile = Join-Path $testRoot 'ready-folder.txt'
     $arguments = @('-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $repoRoot 'app\MarkLens.ps1'),'-Path',$documentRoot,'-DataRoot',$testRoot,'-NoBrowser','-ReadyFile',$folderReadyFile)

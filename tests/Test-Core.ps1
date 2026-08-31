@@ -63,8 +63,9 @@ try {
     Assert-Equal ([IO.Path]::GetFileName($workspace.InitialFile)) 'README.md' 'Folder mode should open the README first.'
 
     $fileWorkspace = Get-MarkLensWorkspace -Path $samplePath
-    Assert-True (-not $fileWorkspace.IsFolder) 'A file path should keep single-file mode.'
-    Assert-Equal (@($fileWorkspace.Files) -join '|') 'security-demo.md' 'Single-file mode should expose only the opened document.'
+    Assert-True $fileWorkspace.IsFolder 'Opening a Markdown file should enable folder mode for its containing directory.'
+    Assert-Equal (@($fileWorkspace.Files) -join '|') 'demo.md|security-demo.md' 'Opening a Markdown file should discover sibling Markdown files automatically.'
+    Assert-Equal ([IO.Path]::GetFileName($fileWorkspace.InitialFile)) 'security-demo.md' 'Opening a Markdown file should keep that file active instead of selecting the folder README or first file.'
 
     $switched = Get-MarkLensWorkspaceDocument -Root $workspaceRoot -RelativePath 'docs/guide.markdown'
     Assert-Equal $switched.FileName 'guide.markdown' 'Workspace documents should resolve by relative path.'

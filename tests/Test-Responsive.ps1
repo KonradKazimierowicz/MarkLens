@@ -21,10 +21,12 @@ $documentPath = Join-Path $testRoot 'long-document.md'
 New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
 $sections = 1..45 | ForEach-Object { "## Section $_`r`n`r`nThis is a longer paragraph for responsive scrolling and table-of-contents verification. It keeps the reader realistic while testing the drawer.`r`n" }
 [IO.File]::WriteAllText($documentPath, "# Responsive MarkLens document`r`n`r`n" + ($sections -join "`r`n"), (New-Object Text.UTF8Encoding($false)))
+[IO.File]::WriteAllText((Join-Path $testRoot 'sibling.md'), "# Automatically discovered sibling", (New-Object Text.UTF8Encoding($false)))
 $dataRoot = Join-Path $testRoot 'data'
 Import-Module (Join-Path $runtimeRoot 'app\MarkLens.Core.psm1') -Force
 $testSettings = ConvertTo-MarkLensHashtable (Get-MarkLensDefaultSettings)
 $testSettings.behavior.onboardingComplete = $true
+$testSettings.behavior.showTableOfContents = $true
 Save-MarkLensSettings -Settings $testSettings -DataRoot $dataRoot | Out-Null
 $server = $null
 try {
