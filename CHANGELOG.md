@@ -2,7 +2,7 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
-## [Unreleased]
+## [1.3.0] - 2026-08-31
 
 ### Added
 
@@ -13,6 +13,8 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.
 ### Changed
 
 - Relative images now resolve against the current document in folder mode and remain confined to the opened folder.
+
+## [1.2.0] - 2026-08-27
 
 ### Added
 
