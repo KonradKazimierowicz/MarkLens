@@ -57,6 +57,11 @@
   var basicColorFields = [
     ['background', 'Background'], ['text', 'Body text'], ['heading', 'Headings'], ['link', 'Links'], ['accent', 'Accent']
   ];
+  var svgNamespace = 'http://www.w3.org/2000/svg';
+  var icons = {
+    copy: 'M16 1H4a2 2 0 0 0-2 2v14h2V3h12zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11z',
+    check: 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'
+  };
   var fontChoices = ['Segoe UI', 'Arial', 'Calibri', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Cascadia Mono', 'Consolas'];
   var fontStacks = {
     'Segoe UI': '"Segoe UI", system-ui, sans-serif', Arial: 'Arial, sans-serif', Calibri: 'Calibri, "Segoe UI", sans-serif',
@@ -142,6 +147,7 @@
     root.setAttribute('data-separator-style', state.components.separatorStyle);
 
     document.body.classList.toggle('no-header', !state.branding.showHeader);
+    document.body.classList.toggle('code-copy-hidden', !state.behavior.showCodeCopyButtons);
     document.getElementById('brandTitle').textContent = state.branding.title;
     document.getElementById('brandWorkspace').textContent = state.branding.workspace;
     document.getElementById('footerName').textContent = state.branding.title;
@@ -307,6 +313,61 @@
     toastTimer = setTimeout(function () { elements.toast.classList.remove('show'); }, 3000);
   }
 
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) { return navigator.clipboard.writeText(text); }
+    return new Promise(function (resolve, reject) {
+      var area = document.createElement('textarea');
+      area.value = text; area.setAttribute('readonly', 'readonly');
+      area.style.position = 'fixed'; area.style.top = '-1000px'; area.style.opacity = '0';
+      document.body.appendChild(area); area.select();
+      var copied = false;
+      try { copied = document.execCommand('copy'); } catch (ignore) { copied = false; }
+      area.remove();
+      if (copied) { resolve(); } else { reject(new Error('The clipboard is unavailable.')); }
+    });
+  }
+
+  function makeIcon(path) {
+    var svg = document.createElementNS(svgNamespace, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+    var shape = document.createElementNS(svgNamespace, 'path');
+    shape.setAttribute('d', path); svg.appendChild(shape);
+    return svg;
+  }
+
+  function addCodeCopyButton(block, code) {
+    var language = (String(code.className).match(/language-([a-z0-9+#.-]+)/i) || [])[1] || '';
+    var button = document.createElement('button');
+    button.type = 'button'; button.className = 'code-copy';
+    button.title = 'Copy this code block';
+    button.setAttribute('aria-label', language ? 'Copy this ' + language + ' code block' : 'Copy this code block');
+    button.appendChild(makeIcon(icons.copy));
+    var label = document.createElement('span'); label.textContent = 'Copy'; button.appendChild(label);
+    var resetTimer = null;
+    button.addEventListener('click', function () {
+      copyText(code.textContent.replace(/\n$/, '')).then(function () {
+        clearTimeout(resetTimer);
+        button.classList.add('is-copied'); label.textContent = 'Copied';
+        button.replaceChild(makeIcon(icons.check), button.firstChild);
+        resetTimer = setTimeout(function () {
+          button.classList.remove('is-copied'); label.textContent = 'Copy';
+          button.replaceChild(makeIcon(icons.copy), button.firstChild);
+        }, 2000);
+      }).catch(function () { showToast('Could not copy this code block.'); });
+    });
+    block.appendChild(button);
+  }
+
+  function enhanceCodeBlocks() {
+    elements.content.querySelectorAll('pre').forEach(function (pre) {
+      var code = pre.querySelector('code');
+      if (!code || !pre.parentNode || pre.parentNode.classList.contains('code-block')) { return; }
+      var block = document.createElement('div'); block.className = 'code-block';
+      pre.parentNode.insertBefore(block, pre); block.appendChild(pre);
+      addCodeCopyButton(block, code);
+    });
+  }
+
   function decodeMarkdown() {
     var binary = atob(bootstrap.document.markdownBase64);
     var bytes = new Uint8Array(binary.length);
@@ -374,6 +435,7 @@
         if (input.type !== 'checkbox') { input.remove(); } else { input.disabled = true; }
       });
       elements.content.querySelectorAll('table').forEach(function (table) { var wrapper = document.createElement('div'); wrapper.className = 'table-wrap'; table.parentNode.insertBefore(wrapper, table); wrapper.appendChild(table); });
+      enhanceCodeBlocks();
       if (window.hljs) { elements.content.querySelectorAll('pre code').forEach(function (block) { window.hljs.highlightElement(block); }); }
       buildTableOfContents();
     } catch (error) {
@@ -545,7 +607,7 @@
       });
     });
     document.getElementById('copyMarkdownButton').addEventListener('click', function () {
-      navigator.clipboard.writeText(decodeMarkdown()).then(function () { showToast('Markdown source copied.'); }).catch(function () { showToast('Could not copy the Markdown source.'); });
+      copyText(decodeMarkdown()).then(function () { showToast('Markdown source copied.'); }).catch(function () { showToast('Could not copy the Markdown source.'); });
     });
     elements.tocToggle.addEventListener('click', function () {
       if (narrowLayout.matches) { if (mobileTocOpen) { closeMobileToc(true); } else { openMobileToc(); } }

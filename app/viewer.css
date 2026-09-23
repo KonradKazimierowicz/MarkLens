@@ -154,6 +154,20 @@ body.folder-mode #tocHeader .toc__close { display: none; }
 .markdown-body code { padding: .16em .36em; color: var(--reader-code-text); background: var(--reader-inline-code-bg); border-radius: 4px; font-family: var(--reader-font-code); font-size: .88em; }
 .markdown-body pre { position: relative; padding: 18px; overflow: auto; color: var(--reader-code-text); background: var(--reader-code-bg); border: 1px solid var(--reader-border); border-radius: calc(var(--reader-radius) * .75); line-height: 1.55; }
 .markdown-body pre code { padding: 0; color: inherit; background: transparent; border-radius: 0; font-size: .86em; }
+.code-block { position: relative; margin: 0 0 calc(1em * var(--reader-block-spacing)); }
+.code-block > pre { margin: 0; }
+.code-copy {
+  position: absolute; top: 9px; right: 9px; z-index: 1; display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px;
+  color: var(--reader-muted); background: color-mix(in srgb, var(--reader-surface) 92%, transparent); border: 1px solid var(--reader-border);
+  border-radius: 7px; font-family: var(--reader-font-body); font-size: 11px; font-weight: 600; line-height: 1.2;
+  opacity: 0; transition: opacity .15s ease, color .15s ease, border-color .15s ease;
+}
+.code-copy svg { width: 13px; height: 13px; fill: currentColor; }
+.code-copy:hover { color: var(--reader-heading); border-color: var(--reader-accent); }
+.code-copy.is-copied { color: var(--reader-accent); border-color: var(--reader-accent); }
+.code-block:hover .code-copy, .code-block:focus-within .code-copy, .code-copy:focus, .code-copy.is-copied { opacity: 1; }
+body.code-copy-hidden .code-copy { display: none; }
+@media (hover: none) { .code-copy { opacity: 1; } }
 .markdown-body blockquote { margin-left: 0; padding: .25em 1em; color: var(--reader-muted); border-left: 4px solid var(--reader-accent); background: var(--reader-quote-bg); }
 html[data-quote-style="card"] .markdown-body blockquote { padding: 1em 1.2em; border: 1px solid var(--reader-border); border-left: 4px solid var(--reader-accent); border-radius: calc(var(--reader-radius) * .7); }
 html[data-quote-style="italic"] .markdown-body blockquote { background: transparent; font-family: Georgia, serif; font-style: italic; }
@@ -239,6 +253,7 @@ body.tour-open .topbar .identity, body.tour-open .topbar .icon-button { opacity:
   .markdown-body p, .markdown-body li { orphans: 3; widows: 3; }
   .markdown-body a { color: black; text-decoration: underline; overflow-wrap: anywhere; }
   .markdown-body a[href^="http://"]::after, .markdown-body a[href^="https://"]::after { content: " (" attr(href) ")"; font-size: .82em; font-weight: 400; }
+  .code-copy { display: none !important; }
   .markdown-body img, .markdown-body pre, .markdown-body blockquote, .markdown-body table, .markdown-body details { break-inside: avoid-page; page-break-inside: avoid; }
   .markdown-body img { max-height: 235mm; object-fit: contain; }
   .markdown-body pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f6f8fa; border-color: #d0d5dd; }

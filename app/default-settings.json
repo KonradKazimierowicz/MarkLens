@@ -87,6 +87,7 @@
   "behavior": {
     "showTableOfContents": false,
     "autoHideToolbar": true,
+    "showCodeCopyButtons": true,
     "onboardingComplete": false
   },
   "customPresets": []

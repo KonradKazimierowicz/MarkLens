@@ -20,6 +20,7 @@ try {
     $candidate.components.quoteStyle = 'script'
     $candidate.branding.logoFile = '..\escape.svg'
     $candidate.branding.title = '<script>alert(1)</script>'
+    $candidate.behavior.showCodeCopyButtons = 'maybe'
     $candidate.customPresets = @(@{ id = 'custom-security-test'; name = 'Security test'; settings = @{ theme = @{ mode = 'dark' } } })
     $validated = Save-MarkLensSettings -Settings $candidate -DataRoot $testRoot
     Assert-Equal $validated.theme.light.background '#f4f6f8' 'CSS colors must be allowlisted.'
@@ -28,6 +29,7 @@ try {
     Assert-Equal $validated.layout.maxWidth 560 'Document width must be clamped.'
     Assert-Equal $validated.components.quoteStyle 'line' 'Component styles must be allowlisted.'
     Assert-True ($null -eq $validated.branding.logoFile) 'Logo paths must not be user-controlled.'
+    Assert-True ($validated.behavior.showCodeCopyButtons -eq $true) 'Unusable behavior switches must fall back to their default.'
     Assert-True ((ConvertFrom-Json ([IO.File]::ReadAllText($paths.CustomPresets))).Count -eq 1) 'Custom presets should persist in the separate theme store.'
 
     $samplePath = Join-Path $repoRoot 'sample\security-demo.md'
