@@ -2,6 +2,13 @@
 
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- **Copy a single code block:** every fenced code block now carries its own copy button that appears when the block is pointed at or focused with the keyboard, so code can be taken without selecting it by hand. The button confirms the copy and leaves the surrounding document untouched; printed output never shows it.
+- A **Show copy button on code blocks** switch in **Appearance → Reader behavior** for turning the buttons off.
+
 ## [1.3.1] - 2026-08-31
 
 ### Fixed

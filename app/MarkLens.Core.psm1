@@ -148,6 +148,7 @@ function Get-MarkLensValidatedSettings {
         behavior = [ordered]@{
             showTableOfContents = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','showTableOfContents') $defaults.behavior.showTableOfContents) $defaults.behavior.showTableOfContents
             autoHideToolbar = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','autoHideToolbar') $defaults.behavior.autoHideToolbar) $defaults.behavior.autoHideToolbar
+            showCodeCopyButtons = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','showCodeCopyButtons') $defaults.behavior.showCodeCopyButtons) $defaults.behavior.showCodeCopyButtons
             onboardingComplete = Get-MarkLensBoolean (Get-MarkLensNestedValue $Candidate @('behavior','onboardingComplete') $defaults.behavior.onboardingComplete) $defaults.behavior.onboardingComplete
         }
         customPresets = @()

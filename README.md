@@ -42,6 +42,7 @@ MarkLens turns local notes, documentation, README files, technical guides, and c
 - **Live customization:** colors, typography, spacing, width, and component styles.
 - **Portable settings:** custom presets plus JSON import and export.
 - **Copy Markdown:** place the complete raw source document on the clipboard in one click.
+- **Copy code blocks:** take a single fenced code block with one button, without selecting the text first.
 - **Print preview:** an ink-friendly document view with readable code, tables, links, and page breaks.
 - **Friendly first run:** choose from five visual styles, then learn every toolbar action in a short guide.
 - **Lightweight installation:** per-user setup with no administrator rights.

@@ -51,7 +51,7 @@
       var steps = [
         { selector: '#tocToggle', title: 'Table of contents', description: 'Open the document outline and jump straight to any heading. On smaller screens it opens as a scrollable drawer.' },
         { selector: '#themeToggle', title: 'Light and dark mode', description: 'Switch the current document between light and dark reading without opening Appearance.' },
-        { selector: '#copyMarkdownButton', title: 'Copy Markdown', description: 'Copy the complete raw Markdown source to the clipboard, including formatting and fenced code.' },
+        { selector: '#copyMarkdownButton', title: 'Copy Markdown', description: 'Copy the complete raw Markdown source to the clipboard, including formatting and fenced code. Single code blocks have their own copy button that appears when you point at them.' },
         { selector: '#printButton', title: 'Print or save as PDF', description: 'Open the native print preview. MarkLens prepares a clean document without reader controls or local paths.' },
         { selector: '#settingsButton', title: 'Appearance and behavior', description: 'Fine-tune colors, typography, width, branding, presets, and reader behavior. You can replay this guide there at any time.' }
       ];
